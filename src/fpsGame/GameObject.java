@@ -2,8 +2,11 @@ package fpsGame;
 
 import processing.core.*;
 
-public class GameObject {
+public abstract class GameObject {
 
 	PVector pos;
 	
+	abstract void update();
+	
+	abstract void render();
 }
