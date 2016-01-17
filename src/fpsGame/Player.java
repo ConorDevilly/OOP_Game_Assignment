@@ -20,7 +20,7 @@ public class Player extends GameObject{
 		float speed = 5f;
 
 		centerPos.y = p.mouseY;
-		centerPos.x = p.mouseX;
+		//centerPos.x = p.mouseX;
 		
 		if (keys['A'])
 		{
