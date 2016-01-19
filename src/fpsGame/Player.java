@@ -16,40 +16,69 @@ public class Player extends GameObject{
 		centerPos = new PVector(p.width / 2, p.height / 2, 0);
 	}
 	
+	/*
+	 * eyePos & mousePos = itself +/- speed * sin/cos(angle???)
+	 * Value to rotate by is previousCenter - newCenter
+	 * Set mouseX to newCenter?
+	 * RotateY - Rotating AROUND the Y axis
+	 *
+	 */
+	
 	void update(){
 		//TODO: Angles.
+		//TODO: Need unit circle kind of movement
 		float speed = 5f;
-
-		centerPos.y = p.mouseY;
-		centerPos.x = p.mouseX;
 		
+		forward.x = PApplet.sin(theta);
+		forward.z = PApplet.cos(theta);
+		forward.mult(speed);
+
 		if (keys['A'])
 		{
-			eyePos.x -= speed;
+			eyePos.x -= forward.x;
 			//As the center position is the mouse, we subtract the speed from the mouse instead
-			p.mouseX -= speed;
+			p.mouseX -= forward.x;
 		}
 		if (keys['D'])
 		{
-			eyePos.x += speed;
-			//centerPos.x += speed;
-			p.mouseX += speed;
+			eyePos.x += forward.x;
+			p.mouseX += forward.x;
 		}
 		if (keys['W'])
 		{
-			eyePos.z -= speed;
-			centerPos.z -= speed;
+			eyePos.z -= forward.z;
+			centerPos.z -= forward.z;
 		}
 		if (keys['S'])
 		{
-			eyePos.z += speed;
-			centerPos.z += speed;
+			eyePos.z += forward.z;
+			centerPos.z += forward.z;
 		}
+
+		centerPos.y = p.mouseY;
+		centerPos.x = p.mouseX;
+
+		/*
+		float xDif = p.mouseX - eyePos.x;
+		if(xDif > 100)
+			eyePos.x++;
+		else if(xDif < 100)
+			eyePos.x--;
+		*/
+			
 	}
 	
 	void render(){
 		p.camera(eyePos.x, eyePos.y, eyePos.z, centerPos.x, centerPos.y, centerPos.z, 0, 1, 0);
-		PApplet.print("\n" + centerPos.x);
+
+		p.pushStyle();
+		p.fill(255, 0, 0);
+		p.textAlign(PApplet.CENTER, PApplet.BOTTOM);
+		p.text("eX", eyePos.x, eyePos.y);
+		p.text("cX", centerPos.x, centerPos.y, centerPos.z);
+		p.text("mouseX", p.mouseX, p.mouseY, centerPos.z);
+		p.popStyle();
+
 		/*
 		p.pushMatrix();
 		p.pushStyle();

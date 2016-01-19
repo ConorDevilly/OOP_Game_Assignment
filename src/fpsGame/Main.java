@@ -16,14 +16,16 @@ public class Main extends PApplet{
 	}
 	*/
 	
+	//TODO: Investigate Core Dumps
+	
 	ArrayList<GameObject> objects = new ArrayList<GameObject>();
 	Player p1;
 	public static boolean[] keys = new boolean[512];
 	int squares;
 
 	public void setup(){
-		//size(displayWidth, displayHeight, P3D);
-		size(500, 500, P3D);
+		size(displayWidth, displayHeight, P3D);
+		//size(500, 500, P3D);
 		cursor(CROSS);
 		p1 = new Player(this, keys);
 		objects.add(p1);

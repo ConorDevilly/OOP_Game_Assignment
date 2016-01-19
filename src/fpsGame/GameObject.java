@@ -4,7 +4,13 @@ import processing.core.*;
 
 public abstract class GameObject {
 
-	PVector pos;
+	PVector forward;
+	float theta;
+	
+	GameObject(){
+		forward = new PVector(0, 0, 0);
+		theta = 0.0f;
+	}
 	
 	abstract void update();
 	
