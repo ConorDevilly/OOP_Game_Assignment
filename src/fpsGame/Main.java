@@ -1,6 +1,7 @@
 package fpsGame;
 
 import processing.core.*;
+
 import java.util.ArrayList;
 
 public class Main extends PApplet{
@@ -21,7 +22,9 @@ public class Main extends PApplet{
 	int squares;
 
 	public void setup(){
-		size(800, 600, P3D);
+		//size(displayWidth, displayHeight, P3D);
+		size(500, 500, P3D);
+		cursor(CROSS);
 		p1 = new Player(this, keys);
 		objects.add(p1);
 		squares = 20;
@@ -29,11 +32,6 @@ public class Main extends PApplet{
 
 	public void draw(){
 		background(0);
-		
-		for(GameObject o : objects){
-			o.update();
-			o.render();
-		}
 
 		for(int i = 0; i < squares; i++){
 			for(int j = 0; j < squares; j++){
@@ -50,6 +48,10 @@ public class Main extends PApplet{
 			    popMatrix();
 			}
 		 }
+		for(GameObject o : objects){
+			o.update();
+			o.render();
+		}
 	}
 
 	public void keyPressed()

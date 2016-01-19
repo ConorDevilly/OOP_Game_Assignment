@@ -17,20 +17,23 @@ public class Player extends GameObject{
 	}
 	
 	void update(){
+		//TODO: Angles.
 		float speed = 5f;
 
 		centerPos.y = p.mouseY;
-		//centerPos.x = p.mouseX;
+		centerPos.x = p.mouseX;
 		
 		if (keys['A'])
 		{
 			eyePos.x -= speed;
-			centerPos.x -= speed;
+			//As the center position is the mouse, we subtract the speed from the mouse instead
+			p.mouseX -= speed;
 		}
 		if (keys['D'])
 		{
 			eyePos.x += speed;
-			centerPos.x += speed;
+			//centerPos.x += speed;
+			p.mouseX += speed;
 		}
 		if (keys['W'])
 		{
@@ -46,6 +49,29 @@ public class Player extends GameObject{
 	
 	void render(){
 		p.camera(eyePos.x, eyePos.y, eyePos.z, centerPos.x, centerPos.y, centerPos.z, 0, 1, 0);
+		PApplet.print("\n" + centerPos.x);
+		/*
+		p.pushMatrix();
+		p.pushStyle();
+
+		p.translate(eyePos.x, eyePos.y, eyePos.z);
+
+
+		p.beginShape();
+
+		p.fill(255, 0, 0);
+		p.stroke(255, 0, 0);
+
+		p.vertex(-25, -50, centerPos.z);
+		p.vertex(25, -50, centerPos.z);
+		p.vertex(25, -100, centerPos.z);
+		p.vertex(-25, -100, centerPos.z);
+
+		p.endShape(PApplet.CLOSE);
+		
+		p.popStyle();
+		p.popMatrix();
+		*/
 	}
 
 }
