@@ -41,14 +41,22 @@ public class Player extends GameObject{
 		//TODO: Change to apply movement
 		if (keys['A'])
 		{
+			centerPos.x -= 15;
+			centerPos.z -= 1;
+			/*
 			eyePos.x -= forward.x;
 			//As the center position is the mouse, we subtract the speed from the mouse instead
 			p.mouseX -= forward.x;
+			*/
 		}
 		if (keys['D'])
 		{
+			centerPos.x += 15;
+			centerPos.z -= 1;
+			/*
 			eyePos.x += forward.x;
 			p.mouseX += forward.x;
+			*/
 		}
 		if (keys['W'])
 		{
@@ -62,8 +70,8 @@ public class Player extends GameObject{
 		}
 
 		//TODO: Change theta
-		centerPos.y = p.mouseY;
-		centerPos.x = p.mouseX;
+		//centerPos.y = p.mouseY;
+		//centerPos.x = p.mouseX;
 		
 		/*
 		float xDif = p.mouseX - eyePos.x;
