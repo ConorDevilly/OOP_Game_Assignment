@@ -50,6 +50,15 @@ public class Main extends PApplet{
 			    popMatrix();
 			}
 		 }
+		
+		/*
+		pushMatrix();
+		translate(width / 2, height / 2 + 200, 0);
+		fill(153, 102, 0);
+		box(500);
+		popMatrix();
+		*/
+		
 		for(GameObject o : objects){
 			o.update();
 			o.render();
