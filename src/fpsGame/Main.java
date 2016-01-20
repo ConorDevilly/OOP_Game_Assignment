@@ -27,7 +27,7 @@ public class Main extends PApplet{
 		size(displayWidth, displayHeight, P3D);
 		//size(500, 500, P3D);
 		cursor(CROSS);
-		p1 = new Player(this, keys);
+		p1 = new Player(this, new PVector(0, 0, 0), keys);
 		objects.add(p1);
 		squares = 20;
 	}

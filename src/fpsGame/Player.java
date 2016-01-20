@@ -6,10 +6,12 @@ public class Player extends GameObject{
 	
 	PVector eyePos;
 	PVector centerPos;
+	PVector straight;
 	PApplet p;
 	boolean[] keys;
 	
-	Player(PApplet p, boolean[] keys){
+	Player(PApplet p, PVector pos, boolean[] keys){
+		super(pos);
 		this.p = p;
 		this.keys = keys;
 		eyePos = new PVector(p.width / 2, (p.height / 2) - 100, (p.height / 2) / PApplet.tan(PApplet.PI / 6));
@@ -28,11 +30,15 @@ public class Player extends GameObject{
 		//TODO: Angles.
 		//TODO: Need unit circle kind of movement
 		float speed = 5f;
+		straight = new PVector(eyePos.x, eyePos.y, centerPos.z);
+
+		theta = PApplet.degrees(PApplet.acos(eyePos.dist(straight) / eyePos.dist(centerPos)));
 		
 		forward.x = PApplet.sin(theta);
 		forward.z = PApplet.cos(theta);
 		forward.mult(speed);
 
+		//TODO: Change to apply movement
 		if (keys['A'])
 		{
 			eyePos.x -= forward.x;
@@ -55,15 +61,18 @@ public class Player extends GameObject{
 			centerPos.z += forward.z;
 		}
 
+		//TODO: Change theta
 		centerPos.y = p.mouseY;
 		centerPos.x = p.mouseX;
-
+		
 		/*
 		float xDif = p.mouseX - eyePos.x;
 		if(xDif > 100)
-			eyePos.x++;
+			p.mouseX += 1000;
 		else if(xDif < 100)
-			eyePos.x--;
+			p.mouseX -= 1000;
+		
+		p.mouseX = p.width / 2;
 		*/
 			
 	}
@@ -71,12 +80,15 @@ public class Player extends GameObject{
 	void render(){
 		p.camera(eyePos.x, eyePos.y, eyePos.z, centerPos.x, centerPos.y, centerPos.z, 0, 1, 0);
 
+		//DEBUG
 		p.pushStyle();
 		p.fill(255, 0, 0);
 		p.textAlign(PApplet.CENTER, PApplet.BOTTOM);
 		p.text("eX", eyePos.x, eyePos.y);
 		p.text("cX", centerPos.x, centerPos.y, centerPos.z);
+		p.text(theta, p.mouseX, p.mouseY + 10, centerPos.z);
 		p.text("mouseX", p.mouseX, p.mouseY, centerPos.z);
+		p.text("P3", eyePos.x, eyePos.y, centerPos.z);
 		p.popStyle();
 
 		/*
