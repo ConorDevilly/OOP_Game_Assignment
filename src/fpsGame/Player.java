@@ -55,7 +55,7 @@ public class Player extends GameObject{
 			theta = theta;
 		}
 		else if(xDif < 0 && zDif > 0){
-			theta = 270 - theta;
+			theta = 180 + theta;
 		}
 		else if(xDif < 0 && zDif < 0){
 			theta = 360 - theta;
@@ -128,6 +128,7 @@ public class Player extends GameObject{
 		p.textAlign(PApplet.CENTER, PApplet.BOTTOM);
 		p.text(theta, p.mouseX, p.mouseY + 10, centerPos.z);
 		p.text("mouseX: " + p.mouseX, p.mouseX, p.mouseY, centerPos.z);
+		p.text("Width: " + p.width, p.mouseX, p.mouseY + 20, centerPos.z);
 		p.popStyle();
 
 		/*
