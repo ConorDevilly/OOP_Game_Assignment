@@ -9,12 +9,14 @@ public class Player extends GameObject{
 	PApplet p;
 	float visionRadius;
 	boolean[] keys;
+	float speed;
 	
 	Player(PApplet p, PVector pos, boolean[] keys){
 		super(pos);
 		this.p = p;
 		this.keys = keys;
 		visionRadius = 500;
+		speed = 5;
 		//eyePos = new PVector(p.width / 2, (p.height / 2) - 100, (p.height / 2) / PApplet.tan(PApplet.PI / 6));
 		eyePos = new PVector(p.width / 2, (p.height / 2) - 100, 0);
 		centerPos = new PVector(p.width / 2, p.height / 2, eyePos.z - visionRadius);
@@ -22,19 +24,19 @@ public class Player extends GameObject{
 	
 	void update(){
 
-		float speed = 5f;
-		centerPos.y = p.mouseY;
-		centerPos.x = p.mouseX;
+		//TODO: Fix inverted mouse upon turning around
 		
-		/*
-		if(p.mouseX <= 0){
-			p.mouseX--;
+		/* 
+		 * TODO: Check if theta needs to change at the start of the method
+		 * If so, change it.
+		 * If not, calc theta & proceed
+		 */
+		if(p.mouseX < (p.width / 2) - 250){
+
+		}else if(p.mouseX > (p.width / 2) + 250){
+
 		}
-		if(p.mouseX >= p.width){
-			p.mouseX++;
-		}
-		*/
-		
+
 		PVector straight = new PVector(eyePos.x, eyePos.y, centerPos.z);
 		float distStraight = eyePos.dist(straight);
 		float distCenter = eyePos.dist(centerPos);
@@ -47,6 +49,7 @@ public class Player extends GameObject{
 		p.pushStyle();
 		p.fill(0, 255, 0);
 		p.text("xDif: " + xDif + "\nzDif: " + zDif, p.mouseX, p.mouseY + 50, centerPos.z);
+		p.popStyle();
 		
 		if(xDif > 0 && zDif > 0){
 			theta = 180 - theta;
@@ -60,28 +63,29 @@ public class Player extends GameObject{
 		else if(xDif < 0 && zDif < 0){
 			theta = 360 - theta;
 		}
-		
+
 		//Allow rotation +/- 180 degrees
-		if(p.mouseX < p.width / 2 - 100){
+		//TODO: Find a way of figuring centPosx based off theta
+		if(p.mouseX < (p.width / 2) - 250){
 			if(theta > 0){
-				theta--;
+				//theta--;
+				theta -= speed;
+				PApplet.print("\n" + theta);
 			}else{
 				theta = 360;
 			}
-		}else if(p.mouseX > p.width / 2 + 100){
+		}else if(p.mouseX > (p.width / 2) + 250){
 			if(theta < 360){
-				theta++;
+				//theta++;
+				theta += speed;
+				PApplet.print("\n" + theta);
 			}else{
 				theta = 0;
 			}
 		}
 		
-		/*
-		 * if mouseX near edge
-		 * if mouseX > pMouseX
-		 * 	change Z
-		 */
-		
+		centerPos.y = p.mouseY;
+		centerPos.x = p.mouseX;
 		centerPos.z = -(visionRadius * PApplet.cos(PApplet.radians(theta)));
 
 		forward.x = PApplet.sin(PApplet.radians(theta));
@@ -106,6 +110,7 @@ public class Player extends GameObject{
 	
 	void render(){
 		p.camera(eyePos.x, eyePos.y, eyePos.z, centerPos.x, centerPos.y, centerPos.z, 0, 1, 0);
+
 		//DEBUG
 		p.pushStyle();
 		p.stroke(0, 0, 255);
@@ -130,29 +135,5 @@ public class Player extends GameObject{
 		p.text("mouseX: " + p.mouseX, p.mouseX, p.mouseY, centerPos.z);
 		p.text("Width: " + p.width, p.mouseX, p.mouseY + 20, centerPos.z);
 		p.popStyle();
-
-		/*
-		p.pushMatrix();
-		p.pushStyle();
-
-		p.translate(eyePos.x, eyePos.y, eyePos.z);
-
-
-		p.beginShape();
-
-		p.fill(255, 0, 0);
-		p.stroke(255, 0, 0);
-
-		p.vertex(-25, -50, centerPos.z);
-		p.vertex(25, -50, centerPos.z);
-		p.vertex(25, -100, centerPos.z);
-		p.vertex(-25, -100, centerPos.z);
-
-		p.endShape(PApplet.CLOSE);
-		
-		p.popStyle();
-		p.popMatrix();
-		*/
 	}
-
 }
