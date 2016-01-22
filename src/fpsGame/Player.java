@@ -49,16 +49,31 @@ public class Player extends GameObject{
 		p.text("xDif: " + xDif + "\nzDif: " + zDif, p.mouseX, p.mouseY + 50, centerPos.z);
 		
 		if(xDif > 0 && zDif > 0){
-			theta = theta + 90;
+			theta = 180 - theta;
 		}
 		else if(xDif > 0 && zDif < 0){
 			theta = theta;
 		}
 		else if(xDif < 0 && zDif > 0){
-			theta = theta + 180;
+			theta = 270 - theta;
 		}
 		else if(xDif < 0 && zDif < 0){
 			theta = 360 - theta;
+		}
+		
+		//Allow rotation +/- 180 degrees
+		if(p.mouseX < p.width / 2 - 100){
+			if(theta > 0){
+				theta--;
+			}else{
+				theta = 360;
+			}
+		}else if(p.mouseX > p.width / 2 + 100){
+			if(theta < 360){
+				theta++;
+			}else{
+				theta = 0;
+			}
 		}
 		
 		/*
