@@ -17,6 +17,8 @@ public class Main extends PApplet{
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
+		TieFighter tf = new TieFighter(this);
+		objects.add(tf);
 	}
 
 	public void draw(){

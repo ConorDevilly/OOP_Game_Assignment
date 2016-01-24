@@ -4,13 +4,12 @@ import processing.core.PApplet;
 
 public class HUD extends GameObject{
 
-	PApplet p;
 	int score;
 	int shield;
 	int wave;
 	
 	HUD(PApplet p){
-		this.p = p;
+		super(p);
 		score = 0;
 		shield = 10;
 		wave = 1;
