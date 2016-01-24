@@ -56,6 +56,82 @@ public class HUD extends GameObject{
 		p.textAlign(PApplet.LEFT, PApplet.TOP);
 		p.text("WAVE", 5 * p.width / 6 + p.textWidth(Integer.toString(wave)), 10, 1);
 		
+		//Top Left Gun
+		p.beginShape();
+		p.stroke(0, 0, 255);
+		p.fill(0, 0, 255);
+		p.vertex(45, 308, 1);
+		p.vertex(85, 308, 1);
+		p.vertex(90, 315, 1);
+		p.vertex(85, 323, 1);
+		p.vertex(45, 323, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.fill(255, 0, 0);
+		p.vertex(0, 285, 1);
+		p.vertex(20, 275, 1);
+		p.vertex(60, 275, 1);
+		p.vertex(45, 285, 1);
+		p.vertex(45, 345, 1);
+		p.vertex(60, 355, 1);
+		p.vertex(20, 355, 1);
+		p.vertex(0, 345, 1);
+		p.vertex(30, 345, 1);
+		p.vertex(30, 285, 1);
+		p.vertex(0, 285, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(0, 305, 1);
+		p.vertex(15, 305, 1);
+		p.vertex(20, 310, 1);
+		p.vertex(20, 320, 1);
+		p.vertex(15, 325, 1);
+		p.vertex(0, 325, 1);
+		p.endShape();
+
+		
+		
+		//Top Right Gun
+		p.noFill();
+		p.beginShape();
+		p.stroke(0, 0, 255);
+		p.fill(0, 0, 255);
+		p.vertex(p.width - 45, 308, 1);
+		p.vertex(p.width - 85, 308, 1);
+		p.vertex(p.width - 90, 315, 1);
+		p.vertex(p.width - 85, 323, 1);
+		p.vertex(p.width - 45, 323, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.fill(255, 0, 0);
+		p.vertex(p.width - 0, 285, 1);
+		p.vertex(p.width - 20, 275, 1);
+		p.vertex(p.width - 60, 275, 1);
+		p.vertex(p.width - 45, 285, 1);
+		p.vertex(p.width - 45, 345, 1);
+		p.vertex(p.width - 60, 355, 1);
+		p.vertex(p.width - 20, 355, 1);
+		p.vertex(p.width - 0, 345, 1);
+		p.vertex(p.width - 30, 345, 1);
+		p.vertex(p.width - 30, 285, 1);
+		p.vertex(p.width - 0, 285, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(p.width - 0, 305, 1);
+		p.vertex(p.width - 15, 305, 1);
+		p.vertex(p.width - 20, 310, 1);
+		p.vertex(p.width - 20, 320, 1);
+		p.vertex(p.width - 15, 325, 1);
+		p.vertex(p.width - 0, 325, 1);
+		p.endShape();
 		
 		p.popStyle();
 		p.popMatrix();
