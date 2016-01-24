@@ -56,10 +56,35 @@ public class HUD extends GameObject{
 		p.textAlign(PApplet.LEFT, PApplet.TOP);
 		p.text("WAVE", 5 * p.width / 6 + p.textWidth(Integer.toString(wave)), 10, 1);
 		
+		//Ship
+		p.beginShape();
+		p.strokeWeight(2);
+		p.stroke(255, 0, 0);
+		p.noFill();
+		p.vertex(p.width / 2 - 90, p.height, 1);
+		p.vertex(p.width / 2 - 50, p.height - 35, 1);
+		p.vertex(p.width / 2 - 30, p.height - 50, 1);
+
+		p.vertex(p.width / 2 + 30, p.height - 50, 1);
+		p.vertex(p.width / 2 + 50, p.height - 35, 1);
+		p.vertex(p.width / 2 + 90, p.height, 1);
+
+		p.vertex(p.width / 2 + 40, p.height, 1);
+		p.vertex(p.width / 2 + 30, p.height - 50, 1);
+		p.vertex(p.width / 2 + 40, p.height, 1);
+		p.vertex(p.width / 2 - 40, p.height, 1);
+		p.vertex(p.width / 2 - 30, p.height - 50, 1);
+		p.endShape();
+		
+		//TODO: Put gun drawing into function
+		//TODO: Make guns scale with display size
+		//Guns
 		//Top Left Gun
+		p.strokeWeight(2);
+		p.noFill();
+
 		p.beginShape();
 		p.stroke(0, 0, 255);
-		p.fill(0, 0, 255);
 		p.vertex(45, 308, 1);
 		p.vertex(85, 308, 1);
 		p.vertex(90, 315, 1);
@@ -69,7 +94,6 @@ public class HUD extends GameObject{
 
 		p.beginShape();
 		p.stroke(255, 0, 0);
-		p.fill(255, 0, 0);
 		p.vertex(0, 285, 1);
 		p.vertex(20, 275, 1);
 		p.vertex(60, 275, 1);
@@ -92,14 +116,10 @@ public class HUD extends GameObject{
 		p.vertex(15, 325, 1);
 		p.vertex(0, 325, 1);
 		p.endShape();
-
-		
 		
 		//Top Right Gun
-		p.noFill();
 		p.beginShape();
 		p.stroke(0, 0, 255);
-		p.fill(0, 0, 255);
 		p.vertex(p.width - 45, 308, 1);
 		p.vertex(p.width - 85, 308, 1);
 		p.vertex(p.width - 90, 315, 1);
@@ -109,7 +129,6 @@ public class HUD extends GameObject{
 
 		p.beginShape();
 		p.stroke(255, 0, 0);
-		p.fill(255, 0, 0);
 		p.vertex(p.width - 0, 285, 1);
 		p.vertex(p.width - 20, 275, 1);
 		p.vertex(p.width - 60, 275, 1);
@@ -133,8 +152,77 @@ public class HUD extends GameObject{
 		p.vertex(p.width - 0, 325, 1);
 		p.endShape();
 		
+		//Bottom Left Gun
+		p.beginShape();
+		p.stroke(0, 0, 255);
+		p.vertex(45, 558, 1);
+		p.vertex(85, 558, 1);
+		p.vertex(90, 565, 1);
+		p.vertex(85, 573, 1);
+		p.vertex(45, 573, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(0, 535, 1);
+		p.vertex(20, 525, 1);
+		p.vertex(60, 525, 1);
+		p.vertex(45, 535, 1);
+		p.vertex(45, 595, 1);
+		p.vertex(60, 605, 1);
+		p.vertex(20, 605, 1);
+		p.vertex(0, 595, 1);
+		p.vertex(30, 595, 1);
+		p.vertex(30, 535, 1);
+		p.vertex(0, 535, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(0, 555, 1);
+		p.vertex(15, 555, 1);
+		p.vertex(20, 560, 1);
+		p.vertex(20, 570, 1);
+		p.vertex(15, 575, 1);
+		p.vertex(0, 575, 1);
+		p.endShape();
+		
+		//Bottom Right Gun
+		p.beginShape();
+		p.stroke(0, 0, 255);
+		p.vertex(p.width - 45, 558, 1);
+		p.vertex(p.width - 85, 558, 1);
+		p.vertex(p.width - 90, 565, 1);
+		p.vertex(p.width - 85, 573, 1);
+		p.vertex(p.width - 45, 573, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(p.width - 0, 535, 1);
+		p.vertex(p.width - 20, 525, 1);
+		p.vertex(p.width - 60, 525, 1);
+		p.vertex(p.width - 45, 535, 1);
+		p.vertex(p.width - 45, 595, 1);
+		p.vertex(p.width - 60, 605, 1);
+		p.vertex(p.width - 20, 605, 1);
+		p.vertex(p.width - 0, 595, 1);
+		p.vertex(p.width - 30, 595, 1);
+		p.vertex(p.width - 30, 535, 1);
+		p.vertex(p.width - 0, 535, 1);
+		p.endShape();
+
+		p.beginShape();
+		p.stroke(255, 0, 0);
+		p.vertex(p.width - 0, 555, 1);
+		p.vertex(p.width - 15, 555, 1);
+		p.vertex(p.width - 20, 560, 1);
+		p.vertex(p.width - 20, 570, 1);
+		p.vertex(p.width - 15, 575, 1);
+		p.vertex(p.width - 0, 575, 1);
+		p.endShape();
+
 		p.popStyle();
 		p.popMatrix();
-		
 	}
 }
