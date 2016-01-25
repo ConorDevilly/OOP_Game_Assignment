@@ -1,6 +1,6 @@
 package fpsGame;
 
-import processing.core.PApplet;
+import processing.core.*;
 
 public class HUD extends GameObject{
 
@@ -231,7 +231,8 @@ public class HUD extends GameObject{
 	
 	
 	void shoot(){
-		
+		Laser l = new Laser(p, p.color(0, 255, 0), new PVector(p.width - 90, 565, 1), new PVector(p.mouseX, p.mouseY));
+		Main.objects.add(l);
 	}
 }
 
