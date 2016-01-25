@@ -8,12 +8,14 @@ public class Main extends PApplet{
 	
 	ArrayList<GameObject> objects;
 	HUD hud;
+	public static boolean[] keys;
 
 	public void setup(){
 		//size(displayWidth, displayHeight, P3D);
 		size(800, 600, P3D);
 		cursor(CROSS);
 		objects = new ArrayList<GameObject>();
+		keys = new boolean[512];
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
@@ -28,5 +30,12 @@ public class Main extends PApplet{
 			o.update();
 			o.render();
 		}
+	}
+	
+	public void keyPressed(){
+		keys[keyCode] = true;
+	}
+	public void keyRealeased(){
+		keys[keyCode] = false;
 	}
 }

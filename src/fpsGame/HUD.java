@@ -7,18 +7,21 @@ public class HUD extends GameObject{
 	int score;
 	int shield;
 	int wave;
+	float viewDist;
 	
 	HUD(PApplet p){
 		super(p);
 		score = 0;
 		shield = 10;
 		wave = 1;
+		viewDist = 500;
 	}
 	
 	@Override
 	void update() {
-		// TODO Auto-generated method stub
-		
+		if(Main.keys[' '] == true){
+			shoot();
+		}
 	}
 
 	@Override
@@ -30,9 +33,9 @@ public class HUD extends GameObject{
 		p.fill(255, 0, 0);
 		p.textAlign(PApplet.CENTER, PApplet.TOP);
 		p.textSize(26);
-		p.text("SCORE", p.width / 6, 10, 1);
+		p.text("SCORE", p.width / 6, 10, -10);
 		p.fill(0, 255, 0);
-		p.text(score, p.width / 6, 10 + p.textAscent() + p.textDescent(), 1);
+		p.text(score, p.width / 6, 10 + p.textAscent() + p.textDescent(), -1);
 		
 		//Shield
 		p.noFill();
@@ -223,5 +226,12 @@ public class HUD extends GameObject{
 
 		p.popStyle();
 		p.popMatrix();
+		
+	}
+	
+	
+	void shoot(){
+		
 	}
 }
+
