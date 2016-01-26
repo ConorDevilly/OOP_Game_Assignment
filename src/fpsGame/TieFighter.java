@@ -7,19 +7,23 @@ public class TieFighter extends Ship{
 	float size;
 	float hsize;
 	float qsize;
-	float rot = 0;
+	float rot;
 
 	TieFighter(PApplet p, PVector pos){
 		super(p);
 		this.pos = pos;
 		size = 100;
+		speed = 5;
 		hsize = size / 2;
 		qsize = hsize / 2;
 	}
 
 	@Override
 	void update() {
-		rot += 0.1f;
+		//rot += 0.1f;
+		pos.x += speed;
+		pos.y += speed;
+		pos.z += speed;
 	}
 
 	@Override

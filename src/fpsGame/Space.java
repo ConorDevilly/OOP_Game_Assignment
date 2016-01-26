@@ -25,7 +25,7 @@ public class Space extends GameObject{
 		PVector star = new PVector();
 		star.x = p.random(0, p.width);
 		star.y = p.random(0, p.height);
-		star.z = p.random(-5000, 0); //Z Max????
+		star.z = p.random(-1000, 0); //Z Max????
 		stars.add(star);
 	}
 

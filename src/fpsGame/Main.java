@@ -20,7 +20,8 @@ public class Main extends PApplet{
 		objects.add(hud);
 		Space space = new Space(this);
 		objects.add(space);
-		TieFighter tf = new TieFighter(this, new PVector(width / 2, height / 2, 1));
+		//TieFighter tf = new TieFighter(this, new PVector(width / 2, height / 2, 1));
+		TieFighter tf = new TieFighter(this, new PVector(0, 0, random(-2500, 1)));
 		objects.add(tf);
 	}
 
