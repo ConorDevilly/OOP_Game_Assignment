@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 public class Main extends PApplet{
 	
-	HUD hud;
 	public static ArrayList<GameObject> objects;
 	public static boolean[] keys;
 
@@ -19,6 +18,8 @@ public class Main extends PApplet{
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
+		Space space = new Space(this);
+		objects.add(space);
 		TieFighter tf = new TieFighter(this, new PVector(width / 2, height / 2, 1));
 		objects.add(tf);
 	}

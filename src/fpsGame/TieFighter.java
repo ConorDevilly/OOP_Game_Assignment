@@ -31,7 +31,7 @@ public class TieFighter extends Ship{
 
 		p.translate(pos.x, pos.y, pos.z);
 		/* DEBUG */ //p.rotateY(PApplet.PI / 2);
-		p.rotateY(rot);
+		//p.rotateY(rot);
 		p.noFill();
 		p.stroke(0, 255, 0);
 
@@ -145,5 +145,33 @@ public class TieFighter extends Ship{
 		p.vertex(x, 0, -size - hsize);
 		*/
 		p.endShape();
+	}
+	
+	void calcFlightPath(){
+		/*
+		 * Picking spawn point:
+		 * 1. Pick either Side or Top / Bottom
+		 * 2. Pick random coord for entery point
+		 * 3. Pick exit side
+		 * 4. Pick random coord for exit point
+		 * 5. Pick Z between large -Z values
+		 * (???)
+		 * 6. Loopy shit near turning point.
+		 * 6a. Turning point is with +/- RAND of screen center
+		 * (???)
+		 * 7. Pick speed (bet. A & B)
+		 * (???)
+		 * 8. RotX => Barrell roll turning weird stuff
+		 * (???)
+		 * 
+		 */
+		
+		/*
+		 * Update:
+		 * IF(!WithinTurnPoint)
+		 *   Move toward point
+		 * ELSE
+		 *   Turn by portion of angle 
+		 */
 	}
 }
