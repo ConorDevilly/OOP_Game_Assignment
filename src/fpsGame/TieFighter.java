@@ -8,6 +8,9 @@ public class TieFighter extends Ship{
 	float hsize;
 	float qsize;
 	float rot;
+	float radX;
+	float radY;
+	float radZ;
 	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
@@ -17,7 +20,7 @@ public class TieFighter extends Ship{
 		speed = 5;
 		hsize = size / 2;
 		qsize = hsize / 2;
-		flightPath = (int) p.random(1, 1);
+		flightPath = (int) p.random(2, 2);
 		
 		//Some updates have to made to the position, depending on flight path
 		switch(flightPath){
@@ -25,6 +28,12 @@ public class TieFighter extends Ship{
 		case 1:{
 			pos.z = -1000;
 			rot = 0;
+		}
+		case 2:{
+			rot = 50;
+			radX = -100;
+			radY = 100;
+			radZ = 100;
 		}
 		
 		}
@@ -42,8 +51,15 @@ public class TieFighter extends Ship{
 		
 		//Spinny spinny
 		case 1:{
-			rot += 0.05;
+			rot += 1;
 			pos.z += speed;
+		}
+		
+		case 2:{
+			rot += 0.05;
+			pos.x += ((radX / speed) * PApplet.cos(rot));  
+			pos.y += ((radY / speed) * PApplet.sin(rot));
+			pos.z += ((radZ / speed) * PApplet.sin(rot));
 		}
 		
 		}
@@ -86,7 +102,6 @@ public class TieFighter extends Ship{
 
 		p.translate(pos.x, pos.y, pos.z);
 		/* DEBUG */ //p.rotateY(PApplet.PI / 2);
-		p.rotateZ(rot);
 		p.noFill();
 		p.stroke(0, 255, 0);
 

@@ -34,7 +34,7 @@ public class Space extends GameObject{
 		for(int i = 0; i < stars.size(); i++){
 			PVector s = stars.get(i);
 			s.z += speed;
-			if(s.z > 0){
+			if(s.z > -1){
 				genStar();
 				stars.remove(s);
 			}
