@@ -8,6 +8,7 @@ public class TieFighter extends Ship{
 	float hsize;
 	float qsize;
 	float rot;
+	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
 		super(p);
@@ -16,14 +17,64 @@ public class TieFighter extends Ship{
 		speed = 5;
 		hsize = size / 2;
 		qsize = hsize / 2;
+		flightPath = (int) p.random(1, 1);
+		
+		//Some updates have to made to the position, depending on flight path
+		switch(flightPath){
+		
+		case 1:{
+			pos.z = -1000;
+			rot = 0;
+		}
+		
+		}
 	}
 
 	@Override
 	void update() {
-		//rot += 0.1f;
+		/*
 		pos.x += speed;
 		pos.y += speed;
 		pos.z += speed;
+		*/
+		
+		switch(flightPath){
+		
+		//Spinny spinny
+		case 1:{
+			rot += 0.05;
+			pos.z += speed;
+		}
+		
+		}
+		
+		/*
+		 * TODO: Flight Path
+		 * 
+		 * Picking spawn point:
+		 * 1. Pick either Side or Top / Bottom
+		 * 2. Pick random coord for entery point
+		 * 3. Pick exit side
+		 * 4. Pick random coord for exit point
+		 * 5. Pick Z between large -Z values
+		 * (???)
+		 * 6. Loopy shit near turning point.
+		 * 6a. Turning point is with +/- RAND of screen center
+		 * (???)
+		 * 7. Pick speed (bet. A & B)
+		 * (???)
+		 * 8. RotX => Barrell roll turning weird stuff
+		 * (???)
+		 * 
+		 */
+		
+		/*
+		 * Update:
+		 * IF(!WithinTurnPoint)
+		 *   Move toward point
+		 * ELSE
+		 *   Turn by portion of angle 
+		 */
 	}
 
 	@Override
@@ -35,7 +86,7 @@ public class TieFighter extends Ship{
 
 		p.translate(pos.x, pos.y, pos.z);
 		/* DEBUG */ //p.rotateY(PApplet.PI / 2);
-		//p.rotateY(rot);
+		p.rotateZ(rot);
 		p.noFill();
 		p.stroke(0, 255, 0);
 
@@ -96,86 +147,9 @@ public class TieFighter extends Ship{
 		p.translate(0, qsize, 0);
 		p.sphere(3);
 		
-
-
-		//TODO: Sphere sucks
-		//Link between wings
-		/*
-		p.beginShape();
-		p.vertex(size - ssize, ssize, 0);
-		p.vertex(-size - ssize, ssize, 0);
-		p.vertex(-size - ssize, -ssize, 0);
-		p.vertex(size - ssize, -ssize, 0);
-		p.endShape();
-		*/
-		
-		/*
-		p.beginShape();
-		p.vertex();
-		p.endShape();
-		*/
-		
-		
-		//Wings
-		/*
-		renderWing();
-		renderWing();
-		*/
-		
 		p.popStyle();
 		p.popMatrix();
 	}
 	
-	void renderWing(){
-		//Wing
-		p.beginShape();
-		p.strokeWeight(2);
-		p.stroke(0, 255, 0);
-		p.noFill();
-
-		/*
-		p.vertex(x, 0, 0);
-		p.vertex(x, size, -size);
-		p.vertex(x, size, size);
-		p.vertex(x, 0, size + hsize);
-		p.vertex(x, -size, size);
-		p.vertex(x, -size, -size);
-		p.vertex(x, 0, -size - hsize);
-		p.vertex(x, 0, size + hsize);
-		p.vertex(x, size, size);
-		p.vertex(x, -size, -size);
-		p.vertex(x, -size, size);
-		p.vertex(x, size, -size);
-		p.vertex(x, 0, -size - hsize);
-		*/
-		p.endShape();
-	}
 	
-	void calcFlightPath(){
-		/*
-		 * Picking spawn point:
-		 * 1. Pick either Side or Top / Bottom
-		 * 2. Pick random coord for entery point
-		 * 3. Pick exit side
-		 * 4. Pick random coord for exit point
-		 * 5. Pick Z between large -Z values
-		 * (???)
-		 * 6. Loopy shit near turning point.
-		 * 6a. Turning point is with +/- RAND of screen center
-		 * (???)
-		 * 7. Pick speed (bet. A & B)
-		 * (???)
-		 * 8. RotX => Barrell roll turning weird stuff
-		 * (???)
-		 * 
-		 */
-		
-		/*
-		 * Update:
-		 * IF(!WithinTurnPoint)
-		 *   Move toward point
-		 * ELSE
-		 *   Turn by portion of angle 
-		 */
-	}
 }
