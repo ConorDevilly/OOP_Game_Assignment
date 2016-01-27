@@ -15,6 +15,7 @@ public class TieFighter extends Ship{
 	float radY;
 	float radZ;
 	float oPosZ;
+	boolean towards;
 	boolean rotating;
 	int flightPath;
 
@@ -32,7 +33,6 @@ public class TieFighter extends Ship{
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
 		flightPath = (int) p.random(0, 2);
-		PApplet.println(flightPath);
 
 		switch(flightPath){
 
@@ -54,8 +54,10 @@ public class TieFighter extends Ship{
 			break;
 		}
 		
+		//Move towards & from XWing
 		case 1:{
 			oPosZ = pos.z;
+			towards = true;
 			break;
 		}
 
@@ -69,12 +71,10 @@ public class TieFighter extends Ship{
 		//Elliptically loop around the XWing
 		case 0:{
 			theta += thetaInc;
+			pos.x += radX * PApplet.cos(theta);  
+			pos.y += radY * PApplet.sin(theta);
+			pos.z += radZ * PApplet.sin(theta);;
 			
-			pos.x += (radX * PApplet.cos(theta));  
-			pos.y += (radY * PApplet.sin(theta));
-			pos.z += (radZ * PApplet.sin(theta));;
-			
-
 			//If the TF has completed one rotation of its current path, recalculate it
 			if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
 				calcFlightPath();
@@ -84,8 +84,9 @@ public class TieFighter extends Ship{
 		
 		//Move straight towards and away from XWing
 		case 1:{
-			float move = (pos.z < 0) ? speed : -speed;
-			pos.z += move;
+			//Move towards the XWing, unless its past the XWing Z pos, then move away from it
+			towards = (pos.z >= 500) ? false : towards;
+			pos.z += (towards) ? speed : -speed;
 			
 			//Recalc if near star position
 			if(pos.z < oPosZ + speed && pos.z > oPosZ - speed){
