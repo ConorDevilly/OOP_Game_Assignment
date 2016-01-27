@@ -7,79 +7,94 @@ public class TieFighter extends Ship{
 	float size;
 	float hsize;
 	float qsize;
+	float theta;
+	float thetaInc;
 	float rot;
+	float rotInc;
 	float radX;
 	float radY;
 	float radZ;
+	float oPosZ;
+	boolean rotating;
+	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
 		super(p);
 		this.pos = pos;
 		size = 100;
-		speed = 15;
+		speed = 35;
 		hsize = size / 2;
 		qsize = hsize / 2;
 		
-		rot = 0;
-		//TODO: Find a way of limiting based on inital pos
-		radX = p.random(-p.width / 2, p.width / 2);
-		radY = p.random(-p.height / 2, p.height / 2);
-		radZ = -pos.z / 2;
+		calcFlightPath();
 	}
 	
+	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
-		rot = 0;
-		//TODO: Find a way of limiting based on inital pos
-		radX = p.random(-p.width / 2, p.width / 2);
-		radY = p.random(-p.height / 2, p.height / 2);
-		radZ = -pos.z / 2;
+		flightPath = (int) p.random(0, 2);
+		PApplet.println(flightPath);
+
+		switch(flightPath){
+
+		//Elliptically loop around the XWing
+		case 0:{
+			theta = 0;
+			/*
+			radX = p.random(-pos.x / 2, (p.width - pos.x) / 2);
+			radY = p.random(-pos.y / 2, (p.height - pos.y) / 2);
+			radZ = p.random(0, -pos.z); 
+			*/
+
+			radX = p.random(-speed, speed);
+			radY = p.random(-speed, speed);
+			radZ = p.random(0, speed);
+			thetaInc = p.random(1, speed / 2) / 100;
+			
+			PApplet.println(radX + "\t" + radY + "\t" + radZ);
+			break;
+		}
+		
+		case 1:{
+			oPosZ = pos.z;
+			break;
+		}
+
+		}
 	}
 
 	@Override
 	void update() {
-		/*
-		pos.x += speed;
-		pos.y += speed;
-		pos.z += speed;
-		*/
-		
-		rot += 0.02;
-		pos.x += ((radX / speed) * PApplet.cos(rot));  
-		pos.y += ((radY / speed) * PApplet.sin(rot));
-		pos.z += ((radZ / speed) * PApplet.sin(rot));
-		
-		//If the TF has completed one rotation of its current path, recalculate it
-		if(rot < PApplet.TWO_PI + 0.03 && rot > PApplet.TWO_PI - 0.03){
-			calcFlightPath();
+		switch(flightPath){
+
+		//Elliptically loop around the XWing
+		case 0:{
+			theta += thetaInc;
+			
+			pos.x += (radX * PApplet.cos(theta));  
+			pos.y += (radY * PApplet.sin(theta));
+			pos.z += (radZ * PApplet.sin(theta));;
+			
+
+			//If the TF has completed one rotation of its current path, recalculate it
+			if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
+				calcFlightPath();
+			}
+			break;
 		}
 		
-		/*
-		 * TODO: Flight Path
-		 * 
-		 * Picking spawn point:
-		 * 1. Pick either Side or Top / Bottom
-		 * 2. Pick random coord for entery point
-		 * 3. Pick exit side
-		 * 4. Pick random coord for exit point
-		 * 5. Pick Z between large -Z values
-		 * (???)
-		 * 6. Loopy shit near turning point.
-		 * 6a. Turning point is with +/- RAND of screen center
-		 * (???)
-		 * 7. Pick speed (bet. A & B)
-		 * (???)
-		 * 8. RotX => Barrell roll turning weird stuff
-		 * (???)
-		 * 
-		 */
-		
-		/*
-		 * Update:
-		 * IF(!WithinTurnPoint)
-		 *   Move toward point
-		 * ELSE
-		 *   Turn by portion of angle 
-		 */
+		//Move straight towards and away from XWing
+		case 1:{
+			float move = (pos.z < 0) ? speed : -speed;
+			pos.z += move;
+			
+			//Recalc if near star position
+			if(pos.z < oPosZ + speed && pos.z > oPosZ - speed){
+				calcFlightPath();
+			}
+			break;
+		}
+
+		}
 	}
 
 	@Override

@@ -22,8 +22,10 @@ public class Main extends PApplet{
 		objects.add(space);
 		//TieFighter tf = new TieFighter(this, new PVector(width / 2, height / 2, 1));
 		//TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-5000, -100)));
-		TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-5000, -1000)));
-		objects.add(tf);
+		for(int i = 0; i < 1; i++){
+			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4000, -1000)));
+			objects.add(tf);
+		}
 	}
 
 	public void draw(){
