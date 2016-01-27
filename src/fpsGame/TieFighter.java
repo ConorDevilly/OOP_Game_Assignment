@@ -15,6 +15,7 @@ public class TieFighter extends Ship{
 	float radY;
 	float radZ;
 	float oPosZ;
+	PVector dest;
 	boolean towards;
 	boolean rotating;
 	int flightPath;
@@ -32,32 +33,35 @@ public class TieFighter extends Ship{
 	
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
-		flightPath = (int) p.random(0, 2);
+		flightPath = (int) p.random(0, 3);
+		PApplet.println(flightPath);
 
 		switch(flightPath){
 
 		//Elliptically loop around the XWing
 		case 0:{
 			theta = 0;
-			/*
-			radX = p.random(-pos.x / 2, (p.width - pos.x) / 2);
-			radY = p.random(-pos.y / 2, (p.height - pos.y) / 2);
-			radZ = p.random(0, -pos.z); 
-			*/
-
+			thetaInc = p.random(1, speed / 2) / 100;
 			radX = p.random(-speed, speed);
 			radY = p.random(-speed, speed);
 			radZ = p.random(0, speed);
-			thetaInc = p.random(1, speed / 2) / 100;
-			
-			PApplet.println(radX + "\t" + radY + "\t" + radZ);
 			break;
 		}
 		
-		//Move towards & from XWing
+		//Move towards & away from XWing
 		case 1:{
 			oPosZ = pos.z;
 			towards = true;
+			break;
+		}
+		
+		//Move towards a random point
+		case 2:{
+			dest = new PVector(p.random(0, p.width), p.random(0, p.height), pos.z);
+			theta = PApplet.atan((dest.y - pos.y) / (dest.x - pos.x));
+			PApplet.println("Theta: " + PApplet.degrees(theta));
+			PApplet.println("CPos: " + pos.x + "\t" + pos.y + "\t" + pos.z);
+			PApplet.println("Dest: " + dest.x + "\t" + dest.y + "\t" + dest.z + "\n");
 			break;
 		}
 
@@ -94,13 +98,32 @@ public class TieFighter extends Ship{
 			}
 			break;
 		}
+		
+		//Move to a random point
+		case 2:{
+			//theta = PVector.angleBetween(pos, dest);
+			//theta = PApplet.atan((dest.y - pos.y) / (dest.x - pos.y));
+			pos.x += speed * PApplet.cos(theta);
+			pos.y += speed * PApplet.sin(theta);
+			//pos.z += speed * PApplet.sin(theta);
+			PApplet.println("Curr Pos: " + pos.x + "\t" + pos.y + "\t" + pos.z);
+			
+			if(pos.x < dest.x + speed && pos.x > dest.x - speed
+					&& pos.y < dest.y + speed && pos.y > dest.y - speed
+					&& pos.z < dest.z + speed && pos.z > dest.z - speed
+					){
+				calcFlightPath();
+			}
+			
+			break;
+		}
 
 		}
 	}
 
 	@Override
 	void render() {
-		//TODO: FIX 3D!!!
+		//TODO: Cater for rotations
 		//TODO: Fix multiple functions
 		p.pushMatrix();
 		p.pushStyle();
