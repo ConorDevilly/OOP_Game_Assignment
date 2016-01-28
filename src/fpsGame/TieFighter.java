@@ -33,7 +33,7 @@ public class TieFighter extends Ship{
 	
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
-		flightPath = (int) p.random(0, 3);
+		flightPath = (int) p.random(2, 3);
 		PApplet.println(flightPath);
 
 		switch(flightPath){
@@ -63,28 +63,12 @@ public class TieFighter extends Ship{
 			float yDif = dest.y - pos.y;
 
 			theta = PApplet.atan(yDif/ xDif);
-			
-			//theta = PApplet.atan((pos.y - dest.y) / (pos.x - dest.x));
-			//theta = (theta < 0) ? theta + PApplet.TWO_PI: theta;
-			//theta = (theta < 0) ? theta + PApplet.HALF_PI :  theta;
-			
-			//Angle correction. Taken from old commit, needs rework
-			if(xDif > 0 && yDif > 0){
-				theta = PApplet.PI - theta;
-			}
-			else if(xDif > 0 && yDif < 0){
-				theta = theta;
-			}
-			else if(xDif < 0 && yDif > 0){
+
+			//Correct the angle. Required due to upward movement being negative in processing.
+			if((xDif < 0 && yDif < 0) || (xDif < 0 && yDif > 0)){
 				theta = PApplet.PI + theta;
 			}
-			else if(xDif < 0 && yDif < 0){
-				theta = PApplet.TWO_PI - theta;
-			}	
 
-			PApplet.println("Theta: " + PApplet.degrees(theta));
-			PApplet.println("CPos: " + pos.x + "\t" + pos.y + "\t" + pos.z);
-			PApplet.println("Dest: " + dest.x + "\t" + dest.y + "\t" + dest.z + "\n");
 			break;
 		}
 
@@ -129,7 +113,6 @@ public class TieFighter extends Ship{
 			pos.x += speed * PApplet.cos(theta);
 			pos.y += speed * PApplet.sin(theta);
 			//pos.z += speed * PApplet.sin(theta);
-			PApplet.println("Curr Pos: " + pos.x + "\t" + pos.y + "\t" + pos.z);
 			
 			if(pos.x < dest.x + speed && pos.x > dest.x - speed
 					&& pos.y < dest.y + speed && pos.y > dest.y - speed
