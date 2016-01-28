@@ -58,7 +58,30 @@ public class TieFighter extends Ship{
 		//Move towards a random point
 		case 2:{
 			dest = new PVector(p.random(0, p.width), p.random(0, p.height), pos.z);
-			theta = PApplet.atan((dest.y - pos.y) / (dest.x - pos.x));
+			
+			float xDif = dest.x - pos.x;
+			float yDif = dest.y - pos.y;
+
+			theta = PApplet.atan(yDif/ xDif);
+			
+			//theta = PApplet.atan((pos.y - dest.y) / (pos.x - dest.x));
+			//theta = (theta < 0) ? theta + PApplet.TWO_PI: theta;
+			//theta = (theta < 0) ? theta + PApplet.HALF_PI :  theta;
+			
+			//Angle correction. Taken from old commit, needs rework
+			if(xDif > 0 && yDif > 0){
+				theta = PApplet.PI - theta;
+			}
+			else if(xDif > 0 && yDif < 0){
+				theta = theta;
+			}
+			else if(xDif < 0 && yDif > 0){
+				theta = PApplet.PI + theta;
+			}
+			else if(xDif < 0 && yDif < 0){
+				theta = PApplet.TWO_PI - theta;
+			}	
+
 			PApplet.println("Theta: " + PApplet.degrees(theta));
 			PApplet.println("CPos: " + pos.x + "\t" + pos.y + "\t" + pos.z);
 			PApplet.println("Dest: " + dest.x + "\t" + dest.y + "\t" + dest.z + "\n");
