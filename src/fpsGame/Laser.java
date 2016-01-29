@@ -14,11 +14,12 @@ public class Laser extends GameObject{
 		this.colour = colour;
 		this.from = from;
 		this.to = to;
+		speed = 100;
 	}
 
 	@Override
 	void update(){
-		
+		from.z -= speed;
 	}
 
 	@Override

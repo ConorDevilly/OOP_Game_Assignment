@@ -31,9 +31,16 @@ public class Main extends PApplet{
 	public void draw(){
 		background(0);
 		
-		for(GameObject o : objects){
+		for(int i = 0; i < objects.size(); i++){
+			GameObject o = objects.get(i);
 			o.update();
 			o.render();
+			
+			if(o instanceof Laser ){
+				if(o.pos.z < -4000){
+					objects.remove(o);
+				}
+			}
 		}
 	}
 	

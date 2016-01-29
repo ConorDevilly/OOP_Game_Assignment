@@ -4,11 +4,14 @@ import processing.core.*;
 
 public class TieFighter extends Ship{
 	
+	//TODO: Reduce to necessary (scope)
 	float size;
 	float hsize;
 	float qsize;
 	float theta;
 	float thetaInc;
+	float omega;
+	float omegaInc;
 	float rot;
 	float rotInc;
 	float radX;
@@ -16,6 +19,7 @@ public class TieFighter extends Ship{
 	float radZ;
 	float oPosZ;
 	PVector dest;
+	PVector unit;
 	boolean towards;
 	boolean rotating;
 	int flightPath;
@@ -24,7 +28,7 @@ public class TieFighter extends Ship{
 		super(p);
 		this.pos = pos;
 		size = 100;
-		speed = 35;
+		speed = 20;
 		hsize = size / 2;
 		qsize = hsize / 2;
 		
@@ -57,17 +61,33 @@ public class TieFighter extends Ship{
 		
 		//Move towards a random point
 		case 2:{
-			dest = new PVector(p.random(0, p.width), p.random(0, p.height), pos.z);
+			//dest = new PVector(p.random(0, p.width), p.random(0, p.height), pos.z);
+			/*
+			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4000, -1000));
+			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
+			PApplet.println("DEST: " + dest.x + "\t" + dest.y + "\t" + dest.z);
 			
 			float xDif = dest.x - pos.x;
 			float yDif = dest.y - pos.y;
+			float zDif = dest.z - pos.z;
 
 			theta = PApplet.atan(yDif/ xDif);
+			omega = PApplet.atan(zDif / xDif);
+			PApplet.println("T: " + PApplet.degrees(theta));
+			PApplet.println("O: " + PApplet.degrees(omega));
 
 			//Correct the angle. Required due to upward movement being negative in processing.
 			if((xDif < 0 && yDif < 0) || (xDif < 0 && yDif > 0)){
 				theta = PApplet.PI + theta;
 			}
+			*/
+			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4000, -2000));
+			PApplet.println("DST: " + dest.x + "\t" + dest.y + "\t" + dest.z);
+			//Calculate where we want it to move each time
+			//Speed = Dist / Time
+			unit = PVector.sub(pos, dest);
+			unit.div(speed);
+			PApplet.println("UNT: " + unit.x + "\t" + unit.y + "\t" + unit.z);
 
 			break;
 		}
@@ -81,6 +101,7 @@ public class TieFighter extends Ship{
 
 		//Elliptically loop around the XWing
 		case 0:{
+			//TODO: Fix cheat...
 			theta += thetaInc;
 			pos.x += radX * PApplet.cos(theta);  
 			pos.y += radY * PApplet.sin(theta);
@@ -108,16 +129,24 @@ public class TieFighter extends Ship{
 		
 		//Move to a random point
 		case 2:{
-			//theta = PVector.angleBetween(pos, dest);
-			//theta = PApplet.atan((dest.y - pos.y) / (dest.x - pos.y));
-			pos.x += speed * PApplet.cos(theta);
-			pos.y += speed * PApplet.sin(theta);
-			//pos.z += speed * PApplet.sin(theta);
+			//TODO: Make simple...
+			/*
+			pos.x += speed * PApplet.cos(theta) * PApplet.sin(omega);
+			pos.y += speed * PApplet.sin(theta) * PApplet.sin(omega);
+			pos.z += speed * PApplet.cos(omega);
 			
 			if(pos.x < dest.x + speed && pos.x > dest.x - speed
 					&& pos.y < dest.y + speed && pos.y > dest.y - speed
 					&& pos.z < dest.z + speed && pos.z > dest.z - speed
 					){
+				calcFlightPath();
+			}
+			*/
+			
+			pos.add(unit);
+			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
+			
+			if(pos.dist(dest) < 1){
 				calcFlightPath();
 			}
 			
@@ -199,6 +228,4 @@ public class TieFighter extends Ship{
 		p.popStyle();
 		p.popMatrix();
 	}
-	
-	
 }
