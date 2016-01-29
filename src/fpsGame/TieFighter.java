@@ -42,66 +42,44 @@ public class TieFighter extends Ship{
 		PApplet.println(flightPath);
 
 		switch(flightPath){
-
-		//Elliptically loop around the XWing
-		case 0:{
-			theta = 0;
-			thetaInc = p.random(1, speed / 2) / 100;
-			radX = p.random(-speed, speed);
-			radY = p.random(-speed, speed);
-			radZ = p.random(0, speed);
-			break;
-		}
-		
-		//Move towards & away from XWing
-		case 1:{
-			oPosZ = pos.z;
-			towards = true;
-			break;
-		}
-		
-		//Move towards a random point
-		case 2:{
-			//dest = new PVector(p.random(0, p.width), p.random(0, p.height), pos.z);
-			/*
-			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4000, -1000));
-			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
-			PApplet.println("DEST: " + dest.x + "\t" + dest.y + "\t" + dest.z);
-			
-			float xDif = dest.x - pos.x;
-			float yDif = dest.y - pos.y;
-			float zDif = dest.z - pos.z;
-
-			theta = PApplet.atan(yDif/ xDif);
-			omega = PApplet.atan(zDif / xDif);
-			PApplet.println("T: " + PApplet.degrees(theta));
-			PApplet.println("O: " + PApplet.degrees(omega));
-
-			//Correct the angle. Required due to upward movement being negative in processing.
-			if((xDif < 0 && yDif < 0) || (xDif < 0 && yDif > 0)){
-				theta = PApplet.PI + theta;
+			//Elliptically loop around the XWing
+			case 0:{
+				//Set the angle & pick an increment
+				theta = 0;
+				thetaInc = p.random(1, speed / 2) / 100;
+				
+				//Pick a random radius for the orbit
+				radX = p.random(-speed, speed);
+				radY = p.random(-speed, speed);
+				radZ = p.random(0, speed);
+				break;
 			}
-			*/
-			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -2000));
-			float dist = PVector.dist(dest, pos);
-			float time = dist / speed;
-			unit = PVector.sub(dest, pos);
-			unit = PVector.div(unit, time);
 			
+			//Move towards & away from XWing
+			case 1:{
+				//Save the origional position and set the direction
+				oPosZ = pos.z;
+				towards = true;
+				break;
+			}
 			
-			
-			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
-			PApplet.println("DST: " + dest.x + "\t" + dest.y + "\t" + dest.z);
+			//Move towards a random point
+			case 2:{
+				//Generate random destination
+				dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -500));
 
-			//Calculate where we want it to move each time
-			//Speed = Dist / Time
-			
-			
-			PApplet.println("UNT: " + unit.x + "\t" + unit.y + "\t" + unit.z);
+				//Calculate the distance and time it should take to get there
+				float dist = PVector.dist(dest, pos);
+				float time = dist / speed;
+				
+				//Make a PVector of the distance between the src and dst
+				unit = PVector.sub(dest, pos);
+				
+				//Divide the distance by the time to get the speed it should travel in each direction
+				unit = PVector.div(unit, time);
 
-			break;
-		}
-
+				break;
+			}
 		}
 	}
 
@@ -109,60 +87,40 @@ public class TieFighter extends Ship{
 	void update() {
 		switch(flightPath){
 
-		//Elliptically loop around the XWing
-		case 0:{
-			//TODO: Fix cheat...
-			theta += thetaInc;
-			pos.x += radX * PApplet.cos(theta);  
-			pos.y += radY * PApplet.sin(theta);
-			pos.z += radZ * PApplet.sin(theta);;
-			
-			//If the TF has completed one rotation of its current path, recalculate it
-			if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
-				calcFlightPath();
-			}
-			break;
-		}
-		
-		//Move straight towards and away from XWing
-		case 1:{
-			//Move towards the XWing, unless its past the XWing Z pos, then move away from it
-			towards = (pos.z >= 500) ? false : towards;
-			pos.z += (towards) ? speed : -speed;
-			
-			//Recalc if near star position
-			if(pos.z < oPosZ + speed && pos.z > oPosZ - speed){
-				calcFlightPath();
-			}
-			break;
-		}
-		
-		//Move to a random point
-		case 2:{
-			//TODO: Make simple...
-			/*
-			pos.x += speed * PApplet.cos(theta) * PApplet.sin(omega);
-			pos.y += speed * PApplet.sin(theta) * PApplet.sin(omega);
-			pos.z += speed * PApplet.cos(omega);
-			
-			if(pos.x < dest.x + speed && pos.x > dest.x - speed
-					&& pos.y < dest.y + speed && pos.y > dest.y - speed
-					&& pos.z < dest.z + speed && pos.z > dest.z - speed
-					){
-				calcFlightPath();
-			}
-			*/
-			
-			pos.add(unit);
-			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
-			PApplet.println(pos.dist(dest));
-			
-			if(pos.dist(dest) < unit.mag()){
-				calcFlightPath();
+			//Elliptically loop around the XWing
+			case 0:{
+				//TODO: Fix cheat...
+				theta += thetaInc;
+				pos.x += radX * PApplet.cos(theta);  
+				pos.y += radY * PApplet.sin(theta);
+				pos.z += radZ * PApplet.sin(theta);;
+				
+				//If the TF has completed one rotation of its current path, recalculate it
+				if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
+					calcFlightPath();
+				}
+				break;
 			}
 			
-			break;
-		}
+			//Move straight towards and away from XWing
+			case 1:{
+				//Move towards the XWing, unless its past the XWing Z pos, then move away from it
+				towards = (pos.z >= 500) ? false : towards;
+				pos.z += (towards) ? speed : -speed;
+				
+				//Recalc if near star position
+				if(pos.z < oPosZ + speed && pos.z > oPosZ - speed){
+					calcFlightPath();
+				}
+				break;
+			}
+			
+			//Move toward a random point
+			case 2:{
+				pos.add(unit);
+				if(pos.dist(dest) < unit.mag()) calcFlightPath();
+				break;
+			}
 
 		}
 	}

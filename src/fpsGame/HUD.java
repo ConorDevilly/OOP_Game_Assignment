@@ -7,6 +7,7 @@ public class HUD extends GameObject{
 	int score;
 	int shield;
 	int wave;
+	float range;
 	float viewDist;
 	
 	HUD(PApplet p){
@@ -15,13 +16,17 @@ public class HUD extends GameObject{
 		shield = 10;
 		wave = 1;
 		viewDist = 500;
+		range = 1000;
 	}
 	
 	@Override
 	void update() {
+		/*
 		if(Main.keys[' '] == true){
 			shoot();
 		}
+		*/
+		if(p.mousePressed) shoot();
 	}
 
 	@Override
@@ -231,7 +236,7 @@ public class HUD extends GameObject{
 	
 	
 	void shoot(){
-		Laser l = new Laser(p, p.color(0, 255, 0), new PVector(p.width - 90, 565, 1), new PVector(p.mouseX, p.mouseY));
+		Laser l = new Laser(p, p.color(0, 255, 0), new PVector(p.width - 90, 565, 1), new PVector(p.mouseX, p.mouseY, -range));
 		Main.objects.add(l);
 	}
 }

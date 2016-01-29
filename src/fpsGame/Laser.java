@@ -7,19 +7,27 @@ public class Laser extends GameObject{
 	int colour;
 	PVector from;
 	PVector to;
+	PVector unit;
 	float speed;
+	Ship parent;
 
 	Laser(PApplet p, int colour, PVector from, PVector to) {
 		super(p);
 		this.colour = colour;
 		this.from = from;
 		this.to = to;
+		this.parent = parent;
 		speed = 100;
+
+		float dist = PVector.dist(to, from);
+		float time = dist / speed;
+		unit = PVector.sub(to, from);
+		unit = PVector.div(unit, time);
 	}
 
 	@Override
 	void update(){
-		from.z -= speed;
+		from.add(unit);
 	}
 
 	@Override
