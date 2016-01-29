@@ -37,7 +37,8 @@ public class TieFighter extends Ship{
 	
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
-		flightPath = (int) p.random(2, 3);
+		//TODO: Make chance based
+		flightPath = (int) p.random(0, 3);
 		PApplet.println(flightPath);
 
 		switch(flightPath){
@@ -81,12 +82,21 @@ public class TieFighter extends Ship{
 				theta = PApplet.PI + theta;
 			}
 			*/
-			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4000, -2000));
+			dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -2000));
+			float dist = PVector.dist(dest, pos);
+			float time = dist / speed;
+			unit = PVector.sub(dest, pos);
+			unit = PVector.div(unit, time);
+			
+			
+			
+			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
 			PApplet.println("DST: " + dest.x + "\t" + dest.y + "\t" + dest.z);
+
 			//Calculate where we want it to move each time
 			//Speed = Dist / Time
-			unit = PVector.sub(pos, dest);
-			unit.div(speed);
+			
+			
 			PApplet.println("UNT: " + unit.x + "\t" + unit.y + "\t" + unit.z);
 
 			break;
@@ -145,8 +155,9 @@ public class TieFighter extends Ship{
 			
 			pos.add(unit);
 			PApplet.println("POS: " + pos.x + "\t" + pos.y + "\t" + pos.z);
+			PApplet.println(pos.dist(dest));
 			
-			if(pos.dist(dest) < 1){
+			if(pos.dist(dest) < unit.mag()){
 				calcFlightPath();
 			}
 			

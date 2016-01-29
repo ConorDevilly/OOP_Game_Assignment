@@ -23,7 +23,7 @@ public class Main extends PApplet{
 		//TieFighter tf = new TieFighter(this, new PVector(width / 2, height / 2, 1));
 		//TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-5000, -100)));
 		for(int i = 0; i < 1; i++){
-			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4000, -1000)));
+			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4500, -1000)));
 			objects.add(tf);
 		}
 	}
@@ -36,11 +36,13 @@ public class Main extends PApplet{
 			o.update();
 			o.render();
 			
+			/*
 			if(o instanceof Laser ){
 				if(o.pos.z < -4000){
 					objects.remove(o);
 				}
 			}
+			*/
 		}
 	}
 	
