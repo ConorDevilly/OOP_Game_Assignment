@@ -5,9 +5,6 @@ import processing.core.*;
 public class TieFighter extends Ship{
 	
 	//TODO: Reduce to necessary (scope)
-	float size;
-	float hsize;
-	float qsize;
 	float theta;
 	float thetaInc;
 	float omega;
@@ -27,10 +24,7 @@ public class TieFighter extends Ship{
 	TieFighter(PApplet p, PVector pos){
 		super(p);
 		this.pos = pos;
-		size = 100;
 		speed = 20;
-		hsize = size / 2;
-		qsize = hsize / 2;
 		
 		calcFlightPath();
 	}

@@ -18,12 +18,16 @@ public class Main extends PApplet{
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
+		XWing player = new XWing(this, new PVector(width / 2, height, 0));
+		objects.add(player);
+		/*
 		Space space = new Space(this);
 		objects.add(space);
 		for(int i = 0; i < 1; i++){
 			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4500, -1000)));
 			objects.add(tf);
 		}
+		*/
 	}
 
 	public void draw(){
@@ -44,7 +48,7 @@ public class Main extends PApplet{
 			*/
 		}
 		
-		chkCollisions();
+		//chkCollisions();
 	}
 	
 	void chkCollisions(){

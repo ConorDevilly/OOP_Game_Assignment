@@ -11,13 +11,13 @@ public class Laser extends GameObject{
 	float speed;
 	Ship parent;
 
-	Laser(PApplet p, int colour, PVector from, PVector to) {
+	Laser(PApplet p, int colour, PVector from, PVector to, Ship parent) {
 		super(p);
 		this.colour = colour;
 		this.from = from;
 		this.to = to;
 		this.parent = parent;
-		speed = 100;
+		speed = parent.range / 10;
 
 		float dist = PVector.dist(to, from);
 		float time = dist / speed;

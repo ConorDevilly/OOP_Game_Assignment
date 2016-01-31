@@ -14,7 +14,7 @@ public class Space extends GameObject{
 		stars = new ArrayList<PVector>();
 		speed = 3;
 
-		numStars = (int) p.random(100, 500);
+		numStars = (int) p.random(50, 100);
 		for(int i = 0; i < numStars; i++){
 			genStar();
 		}
