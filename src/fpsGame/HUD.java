@@ -2,7 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
-public class HUD extends Ship{
+public class HUD extends GameObject{
 
 	int score;
 	int shield;
@@ -15,7 +15,6 @@ public class HUD extends Ship{
 		shield = 10;
 		wave = 1;
 		viewDist = 500;
-		range = 1000;
 	}
 	
 	@Override
@@ -25,7 +24,7 @@ public class HUD extends Ship{
 			shoot();
 		}
 		*/
-		if(p.mousePressed) shoot();
+		//if(p.mousePressed) shoot();
 	}
 
 	@Override
@@ -65,12 +64,6 @@ public class HUD extends Ship{
 		p.popStyle();
 		p.popMatrix();
 		
-	}
-	
-	
-	void shoot(){
-		Laser l = new Laser(p, p.color(0, 255, 0), new PVector(p.width /2, 550, 1), new PVector(p.mouseX, p.mouseY, -range), this);
-		Main.objects.add(l);
 	}
 }
 

@@ -16,8 +16,26 @@ public class XWing extends Ship{
 
 	@Override
 	void update() {
-		// TODO Auto-generated method stub
-		
+		if(p.mousePressed){
+			for(int i = 0; i < Main.objects.size(); i++){
+				GameObject target = Main.objects.get(i);
+				
+				if((target instanceof Ship) && (target != this)){
+					//TODO: allow for sensitivity
+					//TODO: This looks awful
+					//TODO: Repetitive looping of GO array. Inefficiencies
+					if((p.screenX(target.pos.x, target.pos.y, target.pos.z) <= p.mouseX + ((Ship) target).hsize
+						&& p.screenX(target.pos.x, target.pos.y, target.pos.z) >= p.mouseX - ((Ship) target).hsize
+						&& (p.screenY(target.pos.x, target.pos.y, target.pos.z) <= p.mouseY + ((Ship) target).hsize
+						&& p.screenY(target.pos.x, target.pos.y, target.pos.z) >= p.mouseY - ((Ship) target).hsize))
+						){
+						PApplet.println("HIT " + target + "at " + target.pos + 
+								" SCREEN: " + p.screenX(target.pos.x, target.pos.y, target.pos.z
+										+ p.screenY(target.pos.x, target.pos.y, target.pos.z)));
+					}
+				}
+			}
+		}
 	}
 
 	@Override
