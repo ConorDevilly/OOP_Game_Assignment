@@ -8,6 +8,7 @@ public class Main extends PApplet{
 	
 	public static ArrayList<GameObject> objects;
 	public static boolean[] keys;
+	boolean paused;
 
 	public void setup(){
 		//size(displayWidth, displayHeight, P3D);
@@ -15,6 +16,7 @@ public class Main extends PApplet{
 		cursor(CROSS);
 		objects = new ArrayList<GameObject>();
 		keys = new boolean[512];
+		paused = false;
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
@@ -33,7 +35,11 @@ public class Main extends PApplet{
 		
 		for(int i = 0; i < objects.size(); i++){
 			GameObject o = objects.get(i);
-			o.update();
+			
+			if(paused == false){
+				o.update();
+			}
+
 			o.render();
 			
 			/*
@@ -69,6 +75,7 @@ public class Main extends PApplet{
 	}
 	
 	public void keyPressed(){
+		if(key == 'p') paused = !paused;
 		keys[keyCode] = true;
 	}
 	public void keyRealeased(){

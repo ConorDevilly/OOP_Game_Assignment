@@ -22,9 +22,9 @@ public class TieFighter extends Ship{
 	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
-		super(p);
+		super(p, 200, pos);
 		this.pos = pos;
-		speed = 20;
+		speed = 30;
 		
 		calcFlightPath();
 	}
@@ -143,7 +143,7 @@ public class TieFighter extends Ship{
 		
 		//Sphere
 		p.sphereDetail(4);
-		p.sphere(size / 4);
+		p.sphere(qsize);
 
 		//Left Wing
 		p.beginShape();
