@@ -9,6 +9,7 @@ public abstract class Ship extends GameObject{
 	float size;
 	float hsize;
 	float qsize;
+	float shield;
 
 	Ship(PApplet p, float size, PVector pos){
 		super(p);

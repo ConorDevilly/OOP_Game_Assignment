@@ -2,7 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
-public class Laser extends GameObject{
+public class Laser extends GameObject implements Projectile{
 	
 	int colour;
 	PVector from;
@@ -10,6 +10,7 @@ public class Laser extends GameObject{
 	PVector unit;
 	float speed;
 	Ship parent;
+	float dmg;
 
 	Laser(PApplet p, int colour, PVector from, PVector to, Ship parent) {
 		super(p);
@@ -23,6 +24,11 @@ public class Laser extends GameObject{
 		float time = dist / speed;
 		unit = PVector.sub(to, from);
 		unit = PVector.div(unit, time);
+		dmg = 100;
+	}
+	
+	public void applyDamage(Ship target){
+		target.shield -= dmg;
 	}
 
 	@Override
@@ -39,14 +45,11 @@ public class Laser extends GameObject{
 		p.stroke(colour);
 		
 		p.beginShape();
-		p.vertex(from.x - 10, from.y, from.z);
-		p.vertex(from.x - 5, from.y - 5, from.z);
-		p.vertex(from.x - 10, from.y, from.z);
-		p.vertex(from.x + 5, from.y - 5, from.z);
-		p.vertex(from.x - 10, from.y, from.z);
-		p.vertex(from.x + 5, from.y + 5, from.z);
-		p.vertex(from.x - 10, from.y, from.z);
-		p.vertex(from.x - 5, from.y + 5, from.z);
+		p.vertex(from.x, from.y - 5, from.z);
+		p.vertex(from.x, from.y + 5, from.z);
+		p.vertex(from.x, from.y + 5, from.z - 50);
+		p.vertex(from.x, from.y - 5, from.z - 50);
+		p.vertex(from.x, from.y - 5, from.z);
 		p.endShape();
 		
 		p.popStyle();

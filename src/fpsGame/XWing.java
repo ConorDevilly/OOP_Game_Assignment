@@ -3,38 +3,57 @@ package fpsGame;
 import processing.core.*;
 
 public class XWing extends Ship{
+
+	boolean firing;
+	PVector[] guns;
 	
-	XWing(PApplet p){
-		super(p);
-		pos = new PVector(p.width / 2, p.height / 2, 0);
-	}
 
 	XWing(PApplet p, PVector pos){
 		super(p);
 		this.pos = pos;
+		firing = false;
+		range = 1000;
+		guns = new PVector[4];
+		guns[0] = new PVector(p.width, pos.y - 250, pos.z);
+		guns[1] = new PVector(0, pos.y - 250, pos.z);
+		guns[2] = new PVector(p.width, pos.y, pos.z);
+		guns[3] = new PVector(0, pos.y, pos.z);
 	}
 
 	@Override
 	void update() {
 		if(p.mousePressed){
+			firing = true;
+			//Laser l = new Laser(p, p.color(0, 255, 0), new PVector(pos.x, pos.y, pos.z), new PVector(p.mouseX, p.mouseY, range), this);
+
+			for(PVector g : guns){
+				//TODO: Need to copy the PVector
+				//PVector lStart = PVector.copy(g);
+				PVector lStart = new PVector(g.x, g.y, g.z);
+				Laser l = new Laser(p, p.color(0, 255, 0), lStart, new PVector(p.mouseX, p.mouseY, -range), this);
+				Main.objects.add(l);
+			}
+
+			
+			/*
+			//TODO: Should this be the collision detection for the laser???
 			for(int i = 0; i < Main.objects.size(); i++){
 				GameObject target = Main.objects.get(i);
 				
 				if((target instanceof Ship) && (target != this)){
-					//TODO: allow for sensitivity
-					//TODO: This looks awful
 					//TODO: Repetitive looping of GO array. Inefficiencies
 					if((p.screenX(target.pos.x, target.pos.y, target.pos.z) <= p.mouseX + ((Ship) target).hsize
 						&& p.screenX(target.pos.x, target.pos.y, target.pos.z) >= p.mouseX - ((Ship) target).hsize
 						&& (p.screenY(target.pos.x, target.pos.y, target.pos.z) <= p.mouseY + ((Ship) target).hsize
-						&& p.screenY(target.pos.x, target.pos.y, target.pos.z) >= p.mouseY - ((Ship) target).hsize))
-						){
+						&& p.screenY(target.pos.x, target.pos.y, target.pos.z) >= p.mouseY - ((Ship) target).hsize
+						))){
 						PApplet.println("HIT " + target + "at " + target.pos + 
 								" SCREEN: " + p.screenX(target.pos.x, target.pos.y, target.pos.z
 										+ p.screenY(target.pos.x, target.pos.y, target.pos.z)));
 					}
 				}
 			}
+			*/
 		}
 	}
 
@@ -67,13 +86,16 @@ public class XWing extends Ship{
 		p.vertex(-30, 0, -250);
 		p.endShape();
 		
-		renderGun(new PVector(-p.width / 2, -250, 0));
-		renderGun(new PVector(p.width / 2, -250, 0));
-		renderGun(new PVector(-p.width / 2, 0, 0));
-		renderGun(new PVector(p.width / 2, 0, 0));
-
 		p.popStyle();
 		p.popMatrix();
+		
+		//Create the guns
+		for(PVector p : guns){
+			renderGun(p);
+		}
+
+		firing = false;
+
 	}
 	
 	void renderGun(PVector o){
@@ -85,6 +107,10 @@ public class XWing extends Ship{
 		//Inner gun 
 		p.beginShape();
 		p.stroke(0, 255, 0);
+		if(firing) 
+			p.fill(0, 255, 0); 
+		else 
+			p.noFill();
 		p.vertex(0, 5, 0);
 		p.vertex(0, 5, -75);
 		p.vertex(0, 0, -100);
@@ -95,6 +121,7 @@ public class XWing extends Ship{
 		//Shield shape
 		p.beginShape();
 		p.stroke(255, 0, 0);
+		p.noFill();
 		p.vertex(-25, 25, 0);
 		p.vertex(25, 25, 0);
 		p.vertex(25, -25, 0);
