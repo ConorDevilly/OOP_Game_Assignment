@@ -15,6 +15,7 @@ public class TieFighter extends Ship{
 	float radY;
 	float radZ;
 	float oPosZ;
+	float fireChance;
 	PVector dest;
 	PVector unit;
 	boolean towards;
@@ -27,6 +28,8 @@ public class TieFighter extends Ship{
 		speed = 30;
 		shield = 100;
 		fireRate = 50;
+		fireChance = 25;
+		points = 100;
 		
 		calcFlightPath();
 	}
@@ -95,7 +98,7 @@ public class TieFighter extends Ship{
 		}
 
 		if(p.frameCount % 60 == 0)
-			if(p.random(0, 100) > 70) 
+			if(p.random(0, 100) > 100 - fireChance) 
 				shoot();
 		
 		switch(flightPath){

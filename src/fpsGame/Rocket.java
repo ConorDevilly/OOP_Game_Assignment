@@ -17,6 +17,7 @@ public class Rocket extends GameObject implements Projectile{
 		size = 20;
 		theta = 0;
 		speed = parent.fireRate;
+		points = 5;
 
 
 		float dist = PVector.dist(to, pos);

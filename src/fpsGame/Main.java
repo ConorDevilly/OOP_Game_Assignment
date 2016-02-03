@@ -20,7 +20,7 @@ public class Main extends PApplet{
 		
 		player = new XWing(this, new PVector(width / 2, height, 0));
 		objects.add(player);
-		HUD hud = new HUD(this);
+		HUD hud = new HUD(this, player);
 		objects.add(hud);
 		Space space = new Space(this);
 		objects.add(space);
@@ -30,7 +30,11 @@ public class Main extends PApplet{
 	
 	void genWave(){
 		for(int i = 0; i < wave; i++){
-			TieFighter tf = new TieFighter(this, new PVector(random(0, (i + 1) * width / wave), random(0, (i + 1) * height / wave), random(-4500, -2000)));
+			TieFighter tf = new TieFighter(this, new PVector(
+					random(0, (i + 1) * (width / wave)), 
+					random(0, (i + 1) * (height / wave)), 
+					random(-4500, -2000))
+					);
 			objects.add(tf);
 		}
 	}
@@ -80,6 +84,7 @@ public class Main extends PApplet{
 						if(screenT.x <= mouseX + ((Ship) target).qsize && screenT.x >= mouseX - ((Ship) target).qsize){
 							if(screenT.y <= mouseY + ((Ship) target).qsize && screenT.y >= mouseY - ((Ship) target).qsize){
 								((Laser) o).applyDamage((Ship) target);
+								player.score += target.points;
 								objects.remove(o);
 							}
 						}
@@ -91,6 +96,7 @@ public class Main extends PApplet{
 
 						if(screenT.x <= mouseX + ((Rocket) target).size && screenT.x >= mouseX - ((Rocket) target).size){
 							if(screenT.y <= mouseY + ((Rocket) target).size && screenT.y >= mouseY - ((Rocket) target).size){
+								player.score += target.points;
 								objects.remove(target);
 								objects.remove(o);
 							}

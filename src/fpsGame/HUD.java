@@ -4,14 +4,12 @@ import processing.core.*;
 
 public class HUD extends GameObject{
 
-	int score;
-	int shield;
-	int wave;
 	float viewDist;
+	Ship parent;
 	
-	HUD(PApplet p){
+	HUD(PApplet p, Ship parent){
 		super(p);
-		score = 0;
+		this.parent = parent;
 		viewDist = 500;
 	}
 	
@@ -23,8 +21,9 @@ public class HUD extends GameObject{
 		p.pushMatrix();
 		p.pushStyle();
 
-		shield = (int) Main.player.shield;
-		wave = Main.wave;
+		int shield = (int) parent.shield;
+		int score = (int) parent.score;
+		int wave = Main.wave;
 		
 		//Score
 		p.fill(255, 0, 0);
