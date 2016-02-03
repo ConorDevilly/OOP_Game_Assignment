@@ -12,8 +12,6 @@ public class HUD extends GameObject{
 	HUD(PApplet p){
 		super(p);
 		score = 0;
-		shield = 10;
-		wave = 1;
 		viewDist = 500;
 	}
 	
@@ -24,6 +22,9 @@ public class HUD extends GameObject{
 	void render() {
 		p.pushMatrix();
 		p.pushStyle();
+
+		shield = (int) Main.player.shield;
+		wave = Main.wave;
 		
 		//Score
 		p.fill(255, 0, 0);

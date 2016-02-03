@@ -7,20 +7,21 @@ import java.util.ArrayList;
 public class Main extends PApplet{
 	
 	public static ArrayList<GameObject> objects;
+	public static XWing player;
+	public static int wave;
 	boolean paused;
-	XWing player;
-	HUD hud;
 
 	public void setup(){
 		size(800, 600, P3D);
 		cursor(CROSS);
 		objects = new ArrayList<GameObject>();
 		paused = false;
+		wave = 1;
 		
-		hud = new HUD(this);
-		objects.add(hud);
 		player = new XWing(this, new PVector(width / 2, height, 0));
 		objects.add(player);
+		HUD hud = new HUD(this);
+		objects.add(hud);
 		Space space = new Space(this);
 		objects.add(space);
 		
@@ -28,8 +29,8 @@ public class Main extends PApplet{
 	}
 	
 	void genWave(){
-		for(int i = 0; i < hud.wave; i++){
-			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4500, -2000)));
+		for(int i = 0; i < wave; i++){
+			TieFighter tf = new TieFighter(this, new PVector(random(0, (i + 1) * width / wave), random(0, (i + 1) * height / wave), random(-4500, -2000)));
 			objects.add(tf);
 		}
 	}
@@ -53,7 +54,7 @@ public class Main extends PApplet{
 		
 		//Create a new wave if no tie fighters were found
 		if(!enemyFound){
-			hud.wave++;
+			wave++;
 			genWave();
 		}
 	}
@@ -90,7 +91,6 @@ public class Main extends PApplet{
 
 						if(screenT.x <= mouseX + ((Rocket) target).size && screenT.x >= mouseX - ((Rocket) target).size){
 							if(screenT.y <= mouseY + ((Rocket) target).size && screenT.y >= mouseY - ((Rocket) target).size){
-								//Messes up
 								objects.remove(target);
 								objects.remove(o);
 							}
@@ -101,6 +101,12 @@ public class Main extends PApplet{
 				//Check if the laser is out of bounds
 				if(o.pos.z < ((Laser) o).parent.range){
 						objects.remove(o);
+				}
+
+			}else if(o instanceof Rocket){
+				if(o.pos.z >= 0){
+					((Rocket) o).applyDamage(player);
+					objects.remove(o);
 				}
 			}
 		}

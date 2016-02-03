@@ -13,6 +13,7 @@ public class XWing extends Ship{
 	XWing(PApplet p, PVector pos){
 		super(p);
 		this.pos = pos;
+		shield = 10;
 		firing = false;
 		fireRate = 1000;
 		range = 1000;
@@ -38,7 +39,7 @@ public class XWing extends Ship{
 	}
 
 	@Override
-	void update() {
+	void update(){
 	}
 
 	@Override
