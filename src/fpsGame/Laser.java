@@ -7,6 +7,7 @@ public class Laser extends GameObject implements Projectile{
 	int colour;
 	PVector to;
 	PVector unit;
+	PVector origin;
 	float speed;
 	Ship parent;
 	float dmg;
@@ -18,6 +19,7 @@ public class Laser extends GameObject implements Projectile{
 		this.pos = pos;
 		this.to = to;
 		this.parent = parent;
+		origin = new PVector(pos.x, pos.y, pos.z);
 		inRange = true;
 		speed = parent.fireRate;
 
@@ -47,9 +49,15 @@ public class Laser extends GameObject implements Projectile{
 		p.stroke(colour);
 		
 		p.beginShape();
-		p.vertex(pos.x, pos.y - 5, pos.z);
-		p.vertex(pos.x, pos.y + 5, pos.z);
+		/*
+		p.vertex(pos.x, pos.y, pos.z);
+		p.vertex(pos.x, pos.y, pos.z);
 		p.vertex(p.mouseX, p.mouseY, pos.z);
+		*/
+		p.vertex(origin.x, origin.y + 5, origin.z);
+		p.vertex(origin.x, origin.y - 5, origin.z);
+		p.vertex(p.mouseX, p.mouseY, pos.z);
+
 		p.endShape();
 		
 		p.popStyle();
