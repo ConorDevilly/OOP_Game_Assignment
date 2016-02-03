@@ -10,6 +10,7 @@ public abstract class Ship extends GameObject{
 	float hsize;
 	float qsize;
 	float shield;
+	float fireRate;
 
 	Ship(PApplet p, float size, PVector pos){
 		super(p);
@@ -21,5 +22,8 @@ public abstract class Ship extends GameObject{
 	
 	Ship(PApplet p){
 		this(p, 100, new PVector(0, 0, 0));
+	}
+	
+	void shoot(){
 	}
 }

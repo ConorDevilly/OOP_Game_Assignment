@@ -7,13 +7,22 @@ public class Rocket extends GameObject implements Projectile{
 	float dmg;
 	float size;
 	float theta;
+	float speed;
+	PVector unit;
 	
-	Rocket(PApplet p, PVector pos){
+	Rocket(PApplet p, PVector pos, PVector to, Ship parent){
 		super(p);
 		this.pos = pos;
 		dmg = 1;
 		size = 20;
 		theta = 0;
+		speed = parent.fireRate;
+
+
+		float dist = PVector.dist(to, pos);
+		float time = dist / speed;
+		unit = PVector.sub(to, pos);
+		unit = PVector.div(unit, time);
 	}
 
 	@Override
@@ -24,6 +33,7 @@ public class Rocket extends GameObject implements Projectile{
 	@Override
 	void update(){
 		theta += 0.1f;
+		pos.add(unit);
 	}
 
 	@Override

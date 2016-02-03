@@ -26,16 +26,26 @@ public class TieFighter extends Ship{
 		this.pos = pos;
 		speed = 30;
 		shield = 100;
+		fireRate = 50;
 		
 		calcFlightPath();
+	}
+	
+	void shoot(){
+		//Need to copy the current position. Cannot pass the pos PVector as passing objects work like pass by reference
+		PVector currPos = new PVector(pos.x, pos.y, pos.z);
+		Rocket r = new Rocket(p, currPos, new PVector(p.width / 2, p.height / 2, 0), this);
+		Main.objects.add(r);
 	}
 	
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
 		//TODO: Make chance based
 		flightPath = (int) p.random(0, 2);
-		PApplet.println(flightPath);
 
+		float shootChance = p.random(0, 100);
+		if(shootChance > 75) shoot();
+		
 		switch(flightPath){
 			//Elliptically loop around the XWing
 			case 0:{
@@ -46,7 +56,7 @@ public class TieFighter extends Ship{
 				//Pick a random radius for the orbit
 				radX = p.random(-speed, speed);
 				radY = p.random(-speed, speed);
-				radZ = p.random(0, speed);
+				radZ = p.random(0, speed / 2);
 				break;
 			}
 			
@@ -61,7 +71,7 @@ public class TieFighter extends Ship{
 			//Move towards a random point
 			case 1:{
 				//Generate random destination
-				dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -500));
+				dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -1000));
 
 				//Calculate the distance and time it should take to get there
 				float dist = PVector.dist(dest, pos);

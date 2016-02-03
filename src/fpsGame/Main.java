@@ -62,7 +62,7 @@ public class Main extends PApplet{
 						
 						if(screenT.x <= mouseX + ((Ship) target).hsize && screenT.x >= mouseX - ((Ship) target).hsize){
 							if(screenT.y <= mouseY + ((Ship) target).hsize && screenT.y >= mouseY - ((Ship) target).hsize){
-								((Laser) o).applyDamage((Ship) target);
+								//((Laser) o).applyDamage((Ship) target);
 								objects.remove(o);
 							}
 						}

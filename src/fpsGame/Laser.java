@@ -19,7 +19,7 @@ public class Laser extends GameObject implements Projectile{
 		this.to = to;
 		this.parent = parent;
 		inRange = true;
-		speed = parent.range / 10;
+		speed = parent.fireRate;
 
 		float dist = PVector.dist(to, pos);
 		float time = dist / speed;

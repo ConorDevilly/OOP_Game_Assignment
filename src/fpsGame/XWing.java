@@ -14,6 +14,7 @@ public class XWing extends Ship{
 		super(p);
 		this.pos = pos;
 		firing = false;
+		fireRate = 1000;
 		range = 1000;
 		fireDelay = 20;
 		guns = new PVector[4];
