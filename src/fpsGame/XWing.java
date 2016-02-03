@@ -6,6 +6,8 @@ public class XWing extends Ship{
 
 	boolean firing;
 	PVector[] guns;
+	float lastFired;
+	float fireDelay;
 	
 
 	XWing(PApplet p, PVector pos){
@@ -13,19 +15,19 @@ public class XWing extends Ship{
 		this.pos = pos;
 		firing = false;
 		range = 1000;
+		fireDelay = 25;
 		guns = new PVector[4];
 		guns[0] = new PVector(p.width, pos.y - 250, pos.z);
 		guns[1] = new PVector(0, pos.y - 250, pos.z);
 		guns[2] = new PVector(p.width, pos.y, pos.z);
 		guns[3] = new PVector(0, pos.y, pos.z);
 	}
-
-	@Override
-	void update() {
-		if(p.mousePressed){
+	
+	void shoot(){
+		//Limit firerate
+		if(p.frameCount - lastFired > fireDelay){
+			lastFired = p.frameCount;
 			firing = true;
-			//Laser l = new Laser(p, p.color(0, 255, 0), new PVector(pos.x, pos.y, pos.z), new PVector(p.mouseX, p.mouseY, range), this);
-
 			for(PVector g : guns){
 				//TODO: Need to copy the PVector
 				//PVector lStart = PVector.copy(g);
@@ -33,8 +35,11 @@ public class XWing extends Ship{
 				Laser l = new Laser(p, p.color(0, 255, 0), lStart, new PVector(p.mouseX, p.mouseY, -range), this);
 				Main.objects.add(l);
 			}
+		}
+	}
 
-			
+	@Override
+	void update() {
 			/*
 			//TODO: Should this be the collision detection for the laser???
 			for(int i = 0; i < Main.objects.size(); i++){
@@ -54,7 +59,6 @@ public class XWing extends Ship{
 				}
 			}
 			*/
-		}
 	}
 
 	@Override

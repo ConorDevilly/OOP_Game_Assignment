@@ -5,24 +5,25 @@ import processing.core.*;
 public class Laser extends GameObject implements Projectile{
 	
 	int colour;
-	PVector from;
 	PVector to;
 	PVector unit;
 	float speed;
 	Ship parent;
 	float dmg;
+	boolean inRange;
 
-	Laser(PApplet p, int colour, PVector from, PVector to, Ship parent) {
+	Laser(PApplet p, int colour, PVector pos, PVector to, Ship parent) {
 		super(p);
 		this.colour = colour;
-		this.from = from;
+		this.pos = pos;
 		this.to = to;
 		this.parent = parent;
+		inRange = true;
 		speed = parent.range / 10;
 
-		float dist = PVector.dist(to, from);
+		float dist = PVector.dist(to, pos);
 		float time = dist / speed;
-		unit = PVector.sub(to, from);
+		unit = PVector.sub(to, pos);
 		unit = PVector.div(unit, time);
 		dmg = 100;
 	}
@@ -33,7 +34,16 @@ public class Laser extends GameObject implements Projectile{
 
 	@Override
 	void update(){
-		from.add(unit);
+		pos.add(unit);
+		/*
+		if(inRange){
+			pos.add(unit);
+			
+			if(pos.z < parent.range){
+				inRange = false;
+			}
+		}
+		*/
 	}
 
 	@Override
@@ -45,11 +55,11 @@ public class Laser extends GameObject implements Projectile{
 		p.stroke(colour);
 		
 		p.beginShape();
-		p.vertex(from.x, from.y - 5, from.z);
-		p.vertex(from.x, from.y + 5, from.z);
-		p.vertex(from.x, from.y + 5, from.z - 50);
-		p.vertex(from.x, from.y - 5, from.z - 50);
-		p.vertex(from.x, from.y - 5, from.z);
+		p.vertex(pos.x, pos.y - 5, pos.z);
+		p.vertex(pos.x, pos.y + 5, pos.z);
+		p.vertex(pos.x, pos.y + 5, pos.z - parent.range);
+		p.vertex(pos.x, pos.y - 5, pos.z - parent.range);
+		p.vertex(pos.x, pos.y - 5, pos.z);
 		p.endShape();
 		
 		p.popStyle();

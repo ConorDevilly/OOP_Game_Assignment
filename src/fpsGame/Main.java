@@ -3,12 +3,14 @@ package fpsGame;
 import processing.core.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Main extends PApplet{
 	
 	public static ArrayList<GameObject> objects;
 	public static boolean[] keys;
 	boolean paused;
+	XWing player;
 
 	public void setup(){
 		//size(displayWidth, displayHeight, P3D);
@@ -20,7 +22,7 @@ public class Main extends PApplet{
 		
 		HUD hud = new HUD(this);
 		objects.add(hud);
-		XWing player = new XWing(this, new PVector(width / 2, height, 0));
+		player = new XWing(this, new PVector(width / 2, height, 0));
 		objects.add(player);
 		Space space = new Space(this);
 		objects.add(space);
@@ -33,49 +35,48 @@ public class Main extends PApplet{
 	public void draw(){
 		background(0);
 		
-		for(int i = 0; i < objects.size(); i++){
+		//for(int i = 0; i < objects.size(); i++){
+		//TODO: Change to iterator???
+		/*
+		int i = objects.size() - 1;
+		while(i >= 0){
+		*/
+		/*
+		Iterator<GameObject> go = objects.iterator();
+		while(go.hasNext()){
+		*/
+		for(int i = objects.size() - 1; i >= 0; i--){
 			GameObject o = objects.get(i);
+			//GameObject o = go.next();
+			if(o == null) PApplet.println("Something fucked up");
 			
 			if(paused == false){
 				o.update();
 			}
-
 			o.render();
-			
-			/*
-			if(o instanceof Laser ){
-				if(o.pos.z < -4000){
-					objects.remove(i);
-					i--;
-				}
-			}
-			*/
+
 		}
+		chkCollisions();
 		
-		//chkCollisions();
 	}
 	
 	void chkCollisions(){
 		for(int i = objects.size() - 1; i >= 0; i--){
 			GameObject o = objects.get(i);
 
-			if(o instanceof TieFighter){
-				for(int j = objects.size() - 1; j >= 0; j--){
-					GameObject other = objects.get(j);
-					
-					if(other instanceof Laser){
-						if(other.pos.z < -4000){
-							objects.remove(other);
-							j++;
-						}
-					}
+			//Check if the laser is out of bounds
+			if(o instanceof Laser){
+				if(o.pos.z < -((Laser) o).parent.range){
+						objects.remove(o);
 				}
 			}
 		}
 	}
 	
+	//Key controls
 	public void keyPressed(){
 		if(key == 'p') paused = !paused;
+		if(key == 'w') player.shoot();
 		keys[keyCode] = true;
 	}
 	public void keyRealeased(){
