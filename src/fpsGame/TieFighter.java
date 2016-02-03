@@ -33,7 +33,7 @@ public class TieFighter extends Ship{
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
 		//TODO: Make chance based
-		flightPath = (int) p.random(0, 3);
+		flightPath = (int) p.random(0, 2);
 		PApplet.println(flightPath);
 
 		switch(flightPath){
@@ -51,7 +51,7 @@ public class TieFighter extends Ship{
 			}
 			
 			//Move towards & away from XWing
-			case 1:{
+			case 2:{
 				//Save the origional position and set the direction
 				oPosZ = pos.z;
 				towards = true;
@@ -59,7 +59,7 @@ public class TieFighter extends Ship{
 			}
 			
 			//Move towards a random point
-			case 2:{
+			case 1:{
 				//Generate random destination
 				dest = new PVector(p.random(0, p.width), p.random(0, p.height), p.random(-4500, -500));
 
@@ -103,7 +103,7 @@ public class TieFighter extends Ship{
 			}
 			
 			//Move straight towards and away from XWing
-			case 1:{
+			case 2:{
 				//Move towards the XWing, unless its past the XWing Z pos, then move away from it
 				towards = (pos.z >= 500) ? false : towards;
 				pos.z += (towards) ? speed : -speed;
@@ -116,7 +116,7 @@ public class TieFighter extends Ship{
 			}
 			
 			//Move toward a random point
-			case 2:{
+			case 1:{
 				pos.add(unit);
 				if(pos.dist(dest) < unit.mag()) calcFlightPath();
 				break;
