@@ -46,11 +46,12 @@ public class Main extends PApplet{
 			}
 			o.render();
 			
-			if(o instanceof TieFighter) enemyFound = true;
-
+			enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 		}
+
 		chkCollisions();
 		
+		//Create a new wave if no tie fighters were found
 		if(!enemyFound){
 			hud.wave++;
 			genWave();
@@ -58,13 +59,15 @@ public class Main extends PApplet{
 	}
 	
 	void chkCollisions(){
-		for(int i = objects.size() - 1; i >= 0; i--){
+		//for(int i = objects.size() - 1; i >= 0; i--){
+		for(int i = 0; i < objects.size(); i++){
 			GameObject o = objects.get(i);
 
 			if(o instanceof Laser){
 				//Check if the laser is shooting a ship
 				for(int j = objects.size() - 1; j >= 0; j--){
 					GameObject target = objects.get(j);
+
 					if(target instanceof Ship && target != player){
 						
 						//We need to find where the target appears to be so we can accurately get the shooting working
@@ -73,9 +76,22 @@ public class Main extends PApplet{
 								screenY(target.pos.x, target.pos.y, target.pos.z)
 								);
 						
-						if(screenT.x <= mouseX + ((Ship) target).hsize && screenT.x >= mouseX - ((Ship) target).hsize){
-							if(screenT.y <= mouseY + ((Ship) target).hsize && screenT.y >= mouseY - ((Ship) target).hsize){
+						if(screenT.x <= mouseX + ((Ship) target).qsize && screenT.x >= mouseX - ((Ship) target).qsize){
+							if(screenT.y <= mouseY + ((Ship) target).qsize && screenT.y >= mouseY - ((Ship) target).qsize){
 								((Laser) o).applyDamage((Ship) target);
+								objects.remove(o);
+							}
+						}
+					}else if(target instanceof Rocket && target != o){
+						PVector screenT = new PVector(
+								screenX(target.pos.x, target.pos.y, target.pos.z),
+								screenY(target.pos.x, target.pos.y, target.pos.z)
+								);
+
+						if(screenT.x <= mouseX + ((Rocket) target).size && screenT.x >= mouseX - ((Rocket) target).size){
+							if(screenT.y <= mouseY + ((Rocket) target).size && screenT.y >= mouseY - ((Rocket) target).size){
+								//Messes up
+								objects.remove(target);
 								objects.remove(o);
 							}
 						}

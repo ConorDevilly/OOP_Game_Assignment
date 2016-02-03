@@ -43,8 +43,6 @@ public class TieFighter extends Ship{
 		//TODO: Make chance based
 		flightPath = (int) p.random(0, 2);
 
-		float shootChance = p.random(0, 100);
-		if(shootChance > 75) shoot();
 		
 		switch(flightPath){
 			//Elliptically loop around the XWing
@@ -91,9 +89,14 @@ public class TieFighter extends Ship{
 	@Override
 	void update(){
 		
+
 		if(shield <= 0){
 			Main.objects.remove(this);
 		}
+
+		if(p.frameCount % 60 == 0)
+			if(p.random(0, 100) > 70) 
+				shoot();
 		
 		switch(flightPath){
 
