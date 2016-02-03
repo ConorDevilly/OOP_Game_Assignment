@@ -18,14 +18,7 @@ public class HUD extends GameObject{
 	}
 	
 	@Override
-	void update() {
-		/*
-		if(Main.keys[' '] == true){
-			shoot();
-		}
-		*/
-		//if(p.mousePressed) shoot();
-	}
+	void update(){}
 
 	@Override
 	void render() {

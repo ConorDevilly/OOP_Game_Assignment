@@ -3,21 +3,17 @@ package fpsGame;
 import processing.core.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class Main extends PApplet{
 	
 	public static ArrayList<GameObject> objects;
-	public static boolean[] keys;
 	boolean paused;
 	XWing player;
 
 	public void setup(){
-		//size(displayWidth, displayHeight, P3D);
 		size(800, 600, P3D);
 		cursor(CROSS);
 		objects = new ArrayList<GameObject>();
-		keys = new boolean[512];
 		paused = false;
 		
 		HUD hud = new HUD(this);
@@ -35,20 +31,8 @@ public class Main extends PApplet{
 	public void draw(){
 		background(0);
 		
-		//for(int i = 0; i < objects.size(); i++){
-		//TODO: Change to iterator???
-		/*
-		int i = objects.size() - 1;
-		while(i >= 0){
-		*/
-		/*
-		Iterator<GameObject> go = objects.iterator();
-		while(go.hasNext()){
-		*/
 		for(int i = objects.size() - 1; i >= 0; i--){
 			GameObject o = objects.get(i);
-			//GameObject o = go.next();
-			if(o == null) PApplet.println("Something fucked up");
 			
 			if(paused == false){
 				o.update();
@@ -57,16 +41,35 @@ public class Main extends PApplet{
 
 		}
 		chkCollisions();
-		
 	}
 	
 	void chkCollisions(){
 		for(int i = objects.size() - 1; i >= 0; i--){
 			GameObject o = objects.get(i);
 
-			//Check if the laser is out of bounds
 			if(o instanceof Laser){
-				if(o.pos.z < -((Laser) o).parent.range){
+				//Check if the laser is shooting a ship
+				for(int j = objects.size() - 1; j >= 0; j--){
+					GameObject target = objects.get(j);
+					if(target instanceof Ship && target != player){
+						
+						//We need to find where the target appears to be so we can accurately get the shooting working
+						PVector screenT = new PVector(
+								screenX(target.pos.x, target.pos.y, target.pos.z),
+								screenY(target.pos.x, target.pos.y, target.pos.z)
+								);
+						
+						if(screenT.x <= mouseX + ((Ship) target).hsize && screenT.x >= mouseX - ((Ship) target).hsize){
+							if(screenT.y <= mouseY + ((Ship) target).hsize && screenT.y >= mouseY - ((Ship) target).hsize){
+								((Laser) o).applyDamage((Ship) target);
+								objects.remove(o);
+							}
+						}
+					}
+				}
+
+				//Check if the laser is out of bounds
+				if(o.pos.z < ((Laser) o).parent.range){
 						objects.remove(o);
 				}
 			}
@@ -76,10 +79,6 @@ public class Main extends PApplet{
 	//Key controls
 	public void keyPressed(){
 		if(key == 'p') paused = !paused;
-		if(key == 'w') player.shoot();
-		keys[keyCode] = true;
-	}
-	public void keyRealeased(){
-		keys[keyCode] = false;
+		if(key == ' ') player.shoot();
 	}
 }

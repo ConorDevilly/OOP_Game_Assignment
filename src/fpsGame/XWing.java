@@ -15,7 +15,7 @@ public class XWing extends Ship{
 		this.pos = pos;
 		firing = false;
 		range = 1000;
-		fireDelay = 25;
+		fireDelay = 20;
 		guns = new PVector[4];
 		guns[0] = new PVector(p.width, pos.y - 250, pos.z);
 		guns[1] = new PVector(0, pos.y - 250, pos.z);
@@ -29,10 +29,8 @@ public class XWing extends Ship{
 			lastFired = p.frameCount;
 			firing = true;
 			for(PVector g : guns){
-				//TODO: Need to copy the PVector
-				//PVector lStart = PVector.copy(g);
 				PVector lStart = new PVector(g.x, g.y, g.z);
-				Laser l = new Laser(p, p.color(0, 255, 0), lStart, new PVector(p.mouseX, p.mouseY, -range), this);
+				Laser l = new Laser(p, p.color(0, 255, 0), lStart, new PVector(p.mouseX, p.mouseY, 0), this);
 				Main.objects.add(l);
 			}
 		}
@@ -40,25 +38,6 @@ public class XWing extends Ship{
 
 	@Override
 	void update() {
-			/*
-			//TODO: Should this be the collision detection for the laser???
-			for(int i = 0; i < Main.objects.size(); i++){
-				GameObject target = Main.objects.get(i);
-				
-				if((target instanceof Ship) && (target != this)){
-					//TODO: Repetitive looping of GO array. Inefficiencies
-					if((p.screenX(target.pos.x, target.pos.y, target.pos.z) <= p.mouseX + ((Ship) target).hsize
-						&& p.screenX(target.pos.x, target.pos.y, target.pos.z) >= p.mouseX - ((Ship) target).hsize
-						&& (p.screenY(target.pos.x, target.pos.y, target.pos.z) <= p.mouseY + ((Ship) target).hsize
-						&& p.screenY(target.pos.x, target.pos.y, target.pos.z) >= p.mouseY - ((Ship) target).hsize
-						))){
-						PApplet.println("HIT " + target + "at " + target.pos + 
-								" SCREEN: " + p.screenX(target.pos.x, target.pos.y, target.pos.z
-										+ p.screenY(target.pos.x, target.pos.y, target.pos.z)));
-					}
-				}
-			}
-			*/
 	}
 
 	@Override
@@ -73,7 +52,6 @@ public class XWing extends Ship{
 		p.noFill();
 		
 		p.translate(pos.x, pos.y, pos.z);
-		//p.rotateY(PApplet.HALF_PI);
 
 		//Ship center
 		p.beginShape();
@@ -111,10 +89,10 @@ public class XWing extends Ship{
 		//Inner gun 
 		p.beginShape();
 		p.stroke(0, 255, 0);
-		if(firing) 
-			p.fill(0, 255, 0); 
-		else 
-			p.noFill();
+
+		if(firing) p.fill(0, 255, 0); 
+		else p.noFill();
+
 		p.vertex(0, 5, 0);
 		p.vertex(0, 5, -75);
 		p.vertex(0, 0, -100);

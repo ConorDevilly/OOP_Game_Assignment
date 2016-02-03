@@ -25,6 +25,7 @@ public class TieFighter extends Ship{
 		super(p, 200, pos);
 		this.pos = pos;
 		speed = 30;
+		shield = 100;
 		
 		calcFlightPath();
 	}
@@ -78,7 +79,12 @@ public class TieFighter extends Ship{
 	}
 
 	@Override
-	void update() {
+	void update(){
+		
+		if(shield <= 0){
+			Main.objects.remove(this);
+		}
+		
 		switch(flightPath){
 
 			//Elliptically loop around the XWing

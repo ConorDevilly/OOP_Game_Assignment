@@ -23,9 +23,10 @@ public class Laser extends GameObject implements Projectile{
 
 		float dist = PVector.dist(to, pos);
 		float time = dist / speed;
+		
 		unit = PVector.sub(to, pos);
 		unit = PVector.div(unit, time);
-		dmg = 100;
+		dmg = 25;
 	}
 	
 	public void applyDamage(Ship target){
@@ -35,19 +36,10 @@ public class Laser extends GameObject implements Projectile{
 	@Override
 	void update(){
 		pos.add(unit);
-		/*
-		if(inRange){
-			pos.add(unit);
-			
-			if(pos.z < parent.range){
-				inRange = false;
-			}
-		}
-		*/
 	}
 
 	@Override
-	void render() {
+	void render(){
 		p.pushMatrix();
 		p.pushStyle();
 		
@@ -57,9 +49,7 @@ public class Laser extends GameObject implements Projectile{
 		p.beginShape();
 		p.vertex(pos.x, pos.y - 5, pos.z);
 		p.vertex(pos.x, pos.y + 5, pos.z);
-		p.vertex(pos.x, pos.y + 5, pos.z - parent.range);
-		p.vertex(pos.x, pos.y - 5, pos.z - parent.range);
-		p.vertex(pos.x, pos.y - 5, pos.z);
+		p.vertex(p.mouseX, p.mouseY, pos.z);
 		p.endShape();
 		
 		p.popStyle();
