@@ -9,6 +9,7 @@ public class Main extends PApplet{
 	public static ArrayList<GameObject> objects;
 	boolean paused;
 	XWing player;
+	HUD hud;
 
 	public void setup(){
 		size(800, 600, P3D);
@@ -16,15 +17,19 @@ public class Main extends PApplet{
 		objects = new ArrayList<GameObject>();
 		paused = false;
 		
-		HUD hud = new HUD(this);
+		hud = new HUD(this);
 		objects.add(hud);
 		player = new XWing(this, new PVector(width / 2, height, 0));
 		objects.add(player);
 		Space space = new Space(this);
 		objects.add(space);
 		
-		for(int i = 0; i < 1; i++){
-			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4500, -1000)));
+		genWave();
+	}
+	
+	void genWave(){
+		for(int i = 0; i < hud.wave; i++){
+			TieFighter tf = new TieFighter(this, new PVector(random(0, width), random(0, height), random(-4500, -2000)));
 			objects.add(tf);
 		}
 	}
@@ -32,6 +37,7 @@ public class Main extends PApplet{
 	public void draw(){
 		background(0);
 		
+		boolean enemyFound = false;
 		for(int i = objects.size() - 1; i >= 0; i--){
 			GameObject o = objects.get(i);
 			
@@ -39,9 +45,16 @@ public class Main extends PApplet{
 				o.update();
 			}
 			o.render();
+			
+			if(o instanceof TieFighter) enemyFound = true;
 
 		}
 		chkCollisions();
+		
+		if(!enemyFound){
+			hud.wave++;
+			genWave();
+		}
 	}
 	
 	void chkCollisions(){
