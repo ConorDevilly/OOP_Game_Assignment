@@ -146,7 +146,8 @@ public class Main extends PApplet{
 		//TODO: Check if highscore
 		if(dead){
 			if(key == BACKSPACE){
-				name = name.substring(0, name.length() - 1);
+				if(name.length() > 0)
+					name = name.substring(0, name.length() - 1);
 			}else if(key == ENTER){
 				try {
 					chkHighscore();
@@ -204,7 +205,7 @@ public class Main extends PApplet{
 
 		try {
 			FileWriter writer;
-			writer = new FileWriter(scores, true);
+			writer = new FileWriter(scores, false);
 			for(String s : input){
 				writer.write(s + "\n");
 			}

@@ -1,3 +1,5 @@
-Conor:17730.0
-Vader:17730.0
-Jim:17730.0
+Conor:4
+zxcv:5
+Vader:2000
+Conor:9010
+Jimmy:14220
