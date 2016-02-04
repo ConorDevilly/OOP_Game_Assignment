@@ -2,7 +2,10 @@ package fpsGame;
 
 import processing.core.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -72,7 +75,7 @@ public class Main extends PApplet{
 
 		}else{
 			textAlign(CENTER);
-			text("Score: " + player.score, width / 2, height / 2);
+			text("Your Score: " + player.score, width / 2, height / 2);
 			text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
 		}
 	}
@@ -140,24 +143,71 @@ public class Main extends PApplet{
 	}
 	
 	public void keyTyped(){
+		//TODO: Check if highscore
 		if(dead){
 			if(key == BACKSPACE){
 				name = name.substring(0, name.length() - 1);
 			}else if(key == ENTER){
-				saveScore(name, player.score);
+				try {
+					chkHighscore();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}else{
 				name += key;
 			}
 		}
 	}
 	
-	void saveScore(String name, float score){
+	ArrayList<String> readScores() throws Exception{
+		ArrayList<String> scores = new ArrayList<String>();
+		
+		BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+		String line;
+		try {
+			while((line = reader.readLine()) != null){
+				scores.add(line);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		return scores;
+	}
+	
+	void chkHighscore() throws Exception{
+		ArrayList<String> scores = readScores();
+		boolean updated = false;
+		int highestRec = -1;
+		
+		for(int i = 0; i < scores.size(); i++){
+			String[] rec = scores.get(i).split(":");
+			
+			if(player.score > Integer.parseInt(rec[1])){
+				updated = true;
+				highestRec = i;
+			}
+		}
+		
+		if(updated){
+			for(int i = 0; i < highestRec; i++){
+				scores.set(i, scores.get(i + 1));
+			}
+			//TODO: Get name
+			scores.set(highestRec, name + ":" + player.score);
+			saveScore(scores);
+		}
+	}
+	
+	void saveScore(ArrayList<String> input){
 		File scores = new File("scores.txt");
 
 		try {
 			FileWriter writer;
 			writer = new FileWriter(scores, true);
-			writer.write(name + ":" + player.score + "\n");
+			for(String s : input){
+				writer.write(s + "\n");
+			}
 			writer.flush();
 			writer.close();
 		} catch (IOException e) {
