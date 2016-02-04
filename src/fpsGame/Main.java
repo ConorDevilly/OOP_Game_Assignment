@@ -2,6 +2,9 @@ package fpsGame;
 
 import processing.core.*;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
@@ -148,8 +151,17 @@ public class Main extends PApplet{
 		}
 	}
 	
-	PrintWriter highscores;
 	void saveScore(String name, float score){
-		highscores = createWriter("score.txt");
+		File scores = new File("scores.txt");
+
+		try {
+			FileWriter writer;
+			writer = new FileWriter(scores, true);
+			writer.write(name + ":" + player.score + "\n");
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
