@@ -17,71 +17,78 @@ public class Main extends PApplet{
 	public static XWing player;
 	public static int wave;
 	boolean paused;
-	boolean dead;
 	String name;
+	String mode;
 
 	public void setup(){
 		size(800, 600, P3D);
 		cursor(CROSS);
+		mode = "menu";
 		objects = new ArrayList<GameObject>();
 		paused = false;
 		name = "";
 		wave = 1;
-		
+
 		player = new XWing(this, new PVector(width / 2, height, 0));
 		objects.add(player);
 		HUD hud = new HUD(this, player);
 		objects.add(hud);
 		Space space = new Space(this);
 		objects.add(space);
+		background(0);
 		
-		genWave();
+		//This is included as the text appears blurry otherwise
+		textMode(SHAPE);
 	}
 	
-	void genWave(){
-		for(int i = 0; i < wave; i++){
-			TieFighter tf = new TieFighter(this, new PVector(
-					random(0, (i + 1) * (width / wave)), 
-					random(0, (i + 1) * (height / wave)), 
-					random(-4500, -2000))
-					);
-			objects.add(tf);
-		}
-	}
 
 	public void draw(){
 		background(0);
 		
-		if(!dead){
-			boolean enemyFound = false;
-			for(int i = objects.size() - 1; i >= 0; i--){
-				GameObject o = objects.get(i);
-				
-				if(paused == false){
-					o.update();
+		switch(mode){
+			//The start screen
+			case "menu":{
+				textAlign(CENTER);
+				text("Star Battles", width / 2, height / 2);
+				text("Press enter to start", width / 2, height / 2 + textAscent() + textDescent());
+				break;
+			}
+
+			//Normal game loop
+			case "playing":{
+				boolean enemyFound = false;
+				for(int i = objects.size() - 1; i >= 0; i--){
+					GameObject o = objects.get(i);
+					
+					if(paused == false){
+						o.update();
+					}
+					o.render();
+					
+					enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 				}
-				o.render();
+
+				chkCollisions();
 				
-				enemyFound = (o instanceof TieFighter) ? true : enemyFound;
+				//Spawn a new wave of tie fighters if none are left
+				if(!enemyFound){
+					wave++;
+					genWave();
+				}
+				break;
 			}
-
-			chkCollisions();
 			
-			//Create a new wave if no tie fighters were found
-			if(!enemyFound){
-				wave++;
-				genWave();
+			//Take the user's score when they die
+			case "score":{
+				textAlign(CENTER);
+				text("Your Score: " + player.score, width / 2, height / 2);
+				text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
+				break;
 			}
-
-		}else{
-			textAlign(CENTER);
-			text("Your Score: " + player.score, width / 2, height / 2);
-			text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
 		}
 	}
 	
 	void chkCollisions(){
-		//for(int i = objects.size() - 1; i >= 0; i--){
 		for(int i = 0; i < objects.size(); i++){
 			GameObject o = objects.get(i);
 
@@ -129,22 +136,44 @@ public class Main extends PApplet{
 			}else if(o instanceof Rocket){
 				if(o.pos.z >= 0){
 					((Rocket) o).applyDamage(player);
-					if(player.shield <= 0) dead = true;
+					if(player.shield <= 0) mode = "score";
 					objects.remove(o);
 				}
 			}
 		}
 	}
+
+	//Spawn a wave of tie fighters
+	void genWave(){
+		for(int i = 0; i < wave; i++){
+			TieFighter tf = new TieFighter(this, new PVector(
+					//random(i * (width / wave), (i + 1) * (width / wave)), 
+					//random(i * height / wave, (i + 1) * (height / wave)), 
+					random(0, (i + 1) * (width / wave)), 
+					random(0, (i + 1) * (height / wave)), 
+					random(-5000, -2000))
+					);
+			objects.add(tf);
+		}
+	}
 	
 	//Key controls
 	public void keyPressed(){
-		if(key == 'p') paused = !paused;
-		if(key == ' ') player.shoot();
+		
+		if(mode == "playing"){
+			if(key == 'p') paused = !paused;
+			if(key == ' ') player.shoot();
+		}else if(mode == "menu"){
+			if(key == ENTER){
+				mode = "playing"; 
+				genWave();
+			}
+		}
 	}
 	
+	//Takes the user's name when they die
 	public void keyTyped(){
-		//TODO: Check if highscore
-		if(dead){
+		if(mode == "score"){
 			if(key == BACKSPACE){
 				if(name.length() > 0)
 					name = name.substring(0, name.length() - 1);
@@ -154,6 +183,7 @@ public class Main extends PApplet{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+				mode = "menu";
 			}else{
 				name += key;
 			}
