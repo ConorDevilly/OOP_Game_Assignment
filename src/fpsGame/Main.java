@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Main extends PApplet{
@@ -10,12 +11,15 @@ public class Main extends PApplet{
 	public static XWing player;
 	public static int wave;
 	boolean paused;
+	boolean dead;
+	String name;
 
 	public void setup(){
 		size(800, 600, P3D);
 		cursor(CROSS);
 		objects = new ArrayList<GameObject>();
 		paused = false;
+		name = "";
 		wave = 1;
 		
 		player = new XWing(this, new PVector(width / 2, height, 0));
@@ -42,24 +46,31 @@ public class Main extends PApplet{
 	public void draw(){
 		background(0);
 		
-		boolean enemyFound = false;
-		for(int i = objects.size() - 1; i >= 0; i--){
-			GameObject o = objects.get(i);
-			
-			if(paused == false){
-				o.update();
+		if(!dead){
+			boolean enemyFound = false;
+			for(int i = objects.size() - 1; i >= 0; i--){
+				GameObject o = objects.get(i);
+				
+				if(paused == false){
+					o.update();
+				}
+				o.render();
+				
+				enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 			}
-			o.render();
-			
-			enemyFound = (o instanceof TieFighter) ? true : enemyFound;
-		}
 
-		chkCollisions();
-		
-		//Create a new wave if no tie fighters were found
-		if(!enemyFound){
-			wave++;
-			genWave();
+			chkCollisions();
+			
+			//Create a new wave if no tie fighters were found
+			if(!enemyFound){
+				wave++;
+				genWave();
+			}
+
+		}else{
+			textAlign(CENTER);
+			text("Score: " + player.score, width / 2, height / 2);
+			text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
 		}
 	}
 	
@@ -112,6 +123,7 @@ public class Main extends PApplet{
 			}else if(o instanceof Rocket){
 				if(o.pos.z >= 0){
 					((Rocket) o).applyDamage(player);
+					if(player.shield <= 0) dead = true;
 					objects.remove(o);
 				}
 			}
@@ -122,5 +134,22 @@ public class Main extends PApplet{
 	public void keyPressed(){
 		if(key == 'p') paused = !paused;
 		if(key == ' ') player.shoot();
+	}
+	
+	public void keyTyped(){
+		if(dead){
+			if(key == BACKSPACE){
+				name = name.substring(0, name.length() - 1);
+			}else if(key == ENTER){
+				saveScore(name, player.score);
+			}else{
+				name += key;
+			}
+		}
+	}
+	
+	PrintWriter highscores;
+	void saveScore(String name, float score){
+		highscores = createWriter("score.txt");
 	}
 }
