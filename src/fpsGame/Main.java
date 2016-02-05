@@ -188,7 +188,7 @@ public class Main extends PApplet{
 	
 	//Takes the user's name when they die
 	public void keyTyped(){
-		if(mode == Mode.GAME){
+		if(mode == Mode.RECORD){
 			if(key == BACKSPACE){
 				if(name.length() > 0)
 					name = name.substring(0, name.length() - 1);
