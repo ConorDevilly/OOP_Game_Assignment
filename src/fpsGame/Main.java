@@ -4,11 +4,9 @@ import processing.core.*;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 
 public class Main extends PApplet{
@@ -16,6 +14,7 @@ public class Main extends PApplet{
 	public static ArrayList<GameObject> objects;
 	public static XWing player;
 	public static int wave;
+	ArrayList<String> highscores;
 	boolean paused;
 	String name;
 	String mode;
@@ -37,8 +36,8 @@ public class Main extends PApplet{
 		objects.add(space);
 		background(0);
 		
-		//This is included as the text appears blurry otherwise
-		textMode(SHAPE);
+		//Need to load a font, otherwise text appears blurry
+		textFont(loadFont("Carlito-48.vlw"));
 	}
 	
 
@@ -83,6 +82,18 @@ public class Main extends PApplet{
 				textAlign(CENTER);
 				text("Your Score: " + player.score, width / 2, height / 2);
 				text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
+				break;
+			}
+			
+			//Display the highscores
+			case "highscore":{
+				if(highscores == null){
+					try {
+						highscores = readScores();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
 				break;
 			}
 		}
