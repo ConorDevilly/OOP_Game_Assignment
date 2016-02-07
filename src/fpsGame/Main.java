@@ -17,16 +17,13 @@ public class Main extends PApplet{
 	ArrayList<String> highscores;
 	boolean paused;
 	String name;
-
-	//List of modes
-	enum Mode{ MENU, GAME, RECORD, SCORES }
-	Mode mode;
+	String mode;
 	
 
 	public void setup(){
 		size(800, 600, P3D);
 		cursor(CROSS);
-		mode = Mode.MENU;
+		mode = "Menu";
 		objects = new ArrayList<GameObject>();
 		paused = false;
 		name = "";
@@ -37,14 +34,14 @@ public class Main extends PApplet{
 		//Need to load a font, otherwise text appears blurry
 		textFont(loadFont("Carlito-48.vlw"));
 
-		changeMode(Mode.MENU);
+		changeMode("Menu");
 	}
 	
-	void changeMode(Mode m){
+	void changeMode(String m){
 		objects.clear();
 		
 		switch(m){
-			case MENU:{
+			case "Menu":{
 				Space space = new Space(this);
 				objects.add(space);
 				Menu menu = new Menu(this);
@@ -52,17 +49,50 @@ public class Main extends PApplet{
 				mode = m;
 				break;
 			}
+			case "Play":{
+				player = new XWing(this, new PVector(width / 2, height, 0));
+				objects.add(player);
+				HUD hud = new HUD(this, player);
+				objects.add(hud);
+				Space space = new Space(this);
+				objects.add(space);
+				wave = 1;
+				genWave();
+				break;
+			}
 		}
+		
+		mode = m;
 	}
 	
 	
 
 	public void draw(){
 		background(0);
+
+		boolean enemyFound = false;
+		for(int i = objects.size() - 1; i >= 0; i--){
+			GameObject o = objects.get(i);
+			
+			if(!paused) o.update();
+			o.render();
+			
+			if(mode == "Play"){
+				enemyFound = (o instanceof TieFighter) ? true : enemyFound;
+				chkCollisions();
+			}
+		}
+
+		//Spawn a new wave of tie fighters if none are left
+		if(!enemyFound && mode == "Play"){
+			wave++;
+			genWave();
+		}
 		
+		/*
 		switch(mode){
 			//The start screen
-			case MENU:{
+			case "Menu":{
 				
 				for(int i = objects.size() - 1; i >= 0; i--){
 					GameObject o = objects.get(i);
@@ -70,17 +100,11 @@ public class Main extends PApplet{
 					o.render();
 				}
 				
-				/*
-				textAlign(CENTER);
-				text("Star Battles", width / 2, height / 2);
-				text("Press enter to start", width / 2, height / 2 + textAscent() + textDescent());
-				text("Press space to see highscores", width / 2, height / 2 + 2 * (textAscent() + textDescent()));
-				*/
 				break;
 			}
 
 			//Normal game loop
-			case GAME:{
+			case "Play":{
 				boolean enemyFound = false;
 				for(int i = objects.size() - 1; i >= 0; i--){
 					GameObject o = objects.get(i);
@@ -104,7 +128,7 @@ public class Main extends PApplet{
 			}
 			
 			//Take the user's score when they die
-			case RECORD:{
+			case "Record":{
 				textAlign(CENTER);
 				text("Your Score: " + player.score, width / 2, height / 2);
 				text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
@@ -112,7 +136,7 @@ public class Main extends PApplet{
 			}
 			
 			//Display the highscores
-			case SCORES:{
+			case "Highscores":{
 				if(highscores == null){
 					try{
 						highscores = readScores();
@@ -134,7 +158,11 @@ public class Main extends PApplet{
 				}
 				break;
 			}
+			default:{
+				text("Dun goof'd", width / 2, height / 2);
+			}
 		}
+	*/
 	}
 	
 	void chkCollisions(){
@@ -186,7 +214,7 @@ public class Main extends PApplet{
 				if(o.pos.z >= 0){
 					((Rocket) o).applyDamage(player);
 					if(player.shield <= 0){
-						mode = Mode.RECORD;
+						mode = "Record";
 						objects.clear();
 						wave = 1;
 					}
@@ -210,38 +238,38 @@ public class Main extends PApplet{
 		}
 	}
 	
-	//Create objects for the game
-	void initGame(){
-		player = new XWing(this, new PVector(width / 2, height, 0));
-		objects.add(player);
-		HUD hud = new HUD(this, player);
-		objects.add(hud);
-		Space space = new Space(this);
-		objects.add(space);
-		
+	public void mouseClicked(){
+		if(mode == "Menu"){
+			for(int i = objects.size() - 1; i >= 0; i--){
+				GameObject go = objects.get(i);
+				if(go instanceof MenuObject){
+					if(((MenuObject) go).active){
+						changeMode(((MenuObject) go).text);
+					}
+				}
+			}
+		}
 	}
 	
 	//Key controls
 	public void keyPressed(){
-		if(mode == Mode.GAME){
+		if(mode == "Play"){
 			if(key == 'p') paused = !paused;
 			if(key == ' ') player.shoot();
-		}else if(mode == Mode.MENU){
+		}else if(mode == "menu"){
 			if(key == ENTER){
-				mode = Mode.GAME; 
-				initGame();
-				genWave();
+				changeMode("Play");
 			}else if(key == ' '){
-				mode = Mode.SCORES;
+				mode = "Highscores";
 			}
-		}else if(mode == Mode.SCORES){
-			if(key == ' ' || key == ENTER) mode = Mode.MENU;
+		}else if(mode == "Highscores"){
+			if(key == ' ' || key == ENTER) mode = "Menu";
 		}
 	}
 	
 	//Takes the user's name when they die
 	public void keyTyped(){
-		if(mode == Mode.RECORD){
+		if(mode == "Record"){
 			if(key == BACKSPACE){
 				if(name.length() > 0)
 					name = name.substring(0, name.length() - 1);
@@ -251,7 +279,7 @@ public class Main extends PApplet{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				mode = Mode.MENU;
+				mode = "Menu";
 			}else{
 				name += key;
 			}
