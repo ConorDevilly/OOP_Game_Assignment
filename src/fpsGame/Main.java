@@ -19,7 +19,7 @@ public class Main extends PApplet{
 	String name;
 
 	//List of modes
-	public enum Mode{ MENU, GAME, RECORD, SCORES }
+	enum Mode{ MENU, GAME, RECORD, SCORES }
 	Mode mode;
 	
 
@@ -32,17 +32,12 @@ public class Main extends PApplet{
 		name = "";
 		wave = 1;
 
-		player = new XWing(this, new PVector(width / 2, height, 0));
-		objects.add(player);
-		HUD hud = new HUD(this, player);
-		objects.add(hud);
-		Space space = new Space(this);
-		objects.add(space);
 		background(0);
 		
 		//Need to load a font, otherwise text appears blurry
 		textFont(loadFont("Carlito-48.vlw"));
 	}
+	
 	
 
 	public void draw(){
@@ -54,6 +49,7 @@ public class Main extends PApplet{
 				textAlign(CENTER);
 				text("Star Battles", width / 2, height / 2);
 				text("Press enter to start", width / 2, height / 2 + textAscent() + textDescent());
+				text("Press space to see highscores", width / 2, height / 2 + 2 * (textAscent() + textDescent()));
 				break;
 			}
 
@@ -92,11 +88,23 @@ public class Main extends PApplet{
 			//Display the highscores
 			case SCORES:{
 				if(highscores == null){
-					try {
+					try{
 						highscores = readScores();
-					} catch (Exception e) {
+						
+					}catch (Exception e){
 						e.printStackTrace();
 					}
+				}
+
+				for(int i = 0; i < highscores.size(); i++){
+					String[] record = highscores.get(i).split(":");
+
+					textAlign(CENTER, TOP);
+					text(
+							(highscores.size() - i)	+ ". " + record[0] + "    " + record[1], 
+							width / 2, height / 2 + 
+							((highscores.size() - 1) - i) * (textAscent() + textDescent())
+						);
 				}
 				break;
 			}
@@ -151,7 +159,11 @@ public class Main extends PApplet{
 			}else if(o instanceof Rocket){
 				if(o.pos.z >= 0){
 					((Rocket) o).applyDamage(player);
-					if(player.shield <= 0) mode = Mode.RECORD;
+					if(player.shield <= 0){
+						mode = Mode.RECORD;
+						objects.clear();
+						wave = 1;
+					}
 					objects.remove(o);
 				}
 			}
@@ -172,17 +184,32 @@ public class Main extends PApplet{
 		}
 	}
 	
+	//Create objects for the game
+	void initGame(){
+		player = new XWing(this, new PVector(width / 2, height, 0));
+		objects.add(player);
+		HUD hud = new HUD(this, player);
+		objects.add(hud);
+		Space space = new Space(this);
+		objects.add(space);
+		
+	}
+	
 	//Key controls
 	public void keyPressed(){
-		
 		if(mode == Mode.GAME){
 			if(key == 'p') paused = !paused;
 			if(key == ' ') player.shoot();
 		}else if(mode == Mode.MENU){
 			if(key == ENTER){
 				mode = Mode.GAME; 
+				initGame();
 				genWave();
+			}else if(key == ' '){
+				mode = Mode.SCORES;
 			}
+		}else if(mode == Mode.SCORES){
+			if(key == ' ' || key == ENTER) mode = Mode.MENU;
 		}
 	}
 	
