@@ -36,6 +36,23 @@ public class Main extends PApplet{
 		
 		//Need to load a font, otherwise text appears blurry
 		textFont(loadFont("Carlito-48.vlw"));
+
+		changeMode(Mode.MENU);
+	}
+	
+	void changeMode(Mode m){
+		objects.clear();
+		
+		switch(m){
+			case MENU:{
+				Space space = new Space(this);
+				objects.add(space);
+				Menu menu = new Menu(this);
+				objects.add(menu);
+				mode = m;
+				break;
+			}
+		}
 	}
 	
 	
@@ -46,10 +63,19 @@ public class Main extends PApplet{
 		switch(mode){
 			//The start screen
 			case MENU:{
+				
+				for(int i = objects.size() - 1; i >= 0; i--){
+					GameObject o = objects.get(i);
+					o.update();
+					o.render();
+				}
+				
+				/*
 				textAlign(CENTER);
 				text("Star Battles", width / 2, height / 2);
 				text("Press enter to start", width / 2, height / 2 + textAscent() + textDescent());
 				text("Press space to see highscores", width / 2, height / 2 + 2 * (textAscent() + textDescent()));
+				*/
 				break;
 			}
 

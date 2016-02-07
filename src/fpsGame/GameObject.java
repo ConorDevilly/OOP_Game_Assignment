@@ -10,6 +10,7 @@ public abstract class GameObject {
 
 	GameObject(PApplet p){
 		this.p = p;
+		pos = new PVector();
 	}
 	
 	abstract void update();
