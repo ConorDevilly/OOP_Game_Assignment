@@ -18,6 +18,7 @@ public class Main extends PApplet{
 	boolean paused;
 	String name;
 	String mode;
+	GameObject o;
 	
 
 	public void setup(){
@@ -88,7 +89,7 @@ public class Main extends PApplet{
 		boolean enemyFound = false;
 		//for(int i = objects.size() - 1; i >= 0; i--){
 		for(int i = 0; i < objects.size(); i++){
-			GameObject o = objects.get(i);
+			o = objects.get(i);
 			
 			if(!paused) o.update();
 			o.render();
@@ -253,11 +254,8 @@ public class Main extends PApplet{
 				name += key;
 			}
 
-			//TODO: HORRIBLE INEFFICIENT LOOPING
-			for(GameObject go : objects){
-				if(go instanceof RecordScoreScreen){
-					((RecordScoreScreen) go).name = name;
-				}
+			if(o instanceof RecordScoreScreen){
+				((RecordScoreScreen) o).name = name;
 			}
 		}
 	}
