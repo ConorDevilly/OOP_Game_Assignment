@@ -70,17 +70,17 @@ public class Main extends PApplet{
 			case "Highscores":{
 				try{
 					ArrayList<String> highscores = readScores();
+					HighscoresScreen screen = new HighscoresScreen(this, highscores);
+					objects.add(screen);
 				}catch (Exception e){
 					e.printStackTrace();
 				}
 				break;
 			}
 		}
-		
+
 		mode = m;
 	}
-	
-	
 
 	public void draw(){
 		background(0);
@@ -129,9 +129,6 @@ public class Main extends PApplet{
 						);
 				}
 				break;
-			}
-			default:{
-				text("Dun goof'd", width / 2, height / 2);
 			}
 		}
 	*/
@@ -209,7 +206,8 @@ public class Main extends PApplet{
 	}
 	
 	public void mouseClicked(){
-		if(mode == "Menu"){
+		//TODO: STOP WITH THE DAMN LOOPS
+		if(mode == "Menu" || mode == "Highscores"){
 			for(int i = objects.size() - 1; i >= 0; i--){
 				GameObject go = objects.get(i);
 				if(go instanceof MenuObject){
@@ -241,7 +239,6 @@ public class Main extends PApplet{
 	//Takes the user's name when they die
 	public void keyTyped(){
 		if(mode == "Record"){
-			
 			if(key == BACKSPACE){
 				if(name.length() > 0)
 					name = name.substring(0, name.length() - 1);
@@ -252,7 +249,7 @@ public class Main extends PApplet{
 					e.printStackTrace();
 				}
 				changeMode("Menu");
-			}else{
+			}else if(name.length() < 5){
 				name += key;
 			}
 

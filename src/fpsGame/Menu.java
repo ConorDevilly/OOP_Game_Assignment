@@ -30,8 +30,7 @@ public class Menu extends GameObject{
 		Main.objects.add(instructions);
 	}
 	
-	void update(){
-	}
+	void update(){}
 	
 	void render(){
 		p.pushMatrix();
