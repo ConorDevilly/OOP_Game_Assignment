@@ -27,7 +27,7 @@ public class Menu extends GameObject{
 		
 		Main.objects.add(play);
 		Main.objects.add(scores);
-		Main.objects.add(instructions);
+		//Main.objects.add(instructions);
 	}
 	
 	void update(){}
@@ -40,7 +40,9 @@ public class Menu extends GameObject{
 		p.textAlign(PApplet.CENTER);
 		
 		p.textSize(52);
-		p.text("Nameless X-Wing Game", pos.x, pos.y);
+
+		//Credit to Connor Duignan for the name
+		p.text("Star Wars \n Rebel Gunner", pos.x, pos.y);
 
 		p.popStyle();
 		p.popMatrix();

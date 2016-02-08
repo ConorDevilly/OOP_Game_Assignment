@@ -63,9 +63,10 @@ public class Main extends PApplet{
 				break;
 			}
 			case "Record":{
-				//TODO: Fix...add keyTyped in update?
 				RecordScoreScreen recScore = new RecordScoreScreen(this, player.score);
 				objects.add(recScore);
+				Space space = new Space(this);
+				objects.add(space);
 				break;
 			}
 			case "Highscores":{
@@ -73,6 +74,8 @@ public class Main extends PApplet{
 					ArrayList<String> highscores = readScores();
 					HighscoresScreen screen = new HighscoresScreen(this, highscores);
 					objects.add(screen);
+					Space space = new Space(this);
+					objects.add(space);
 				}catch (Exception e){
 					e.printStackTrace();
 				}
@@ -104,35 +107,6 @@ public class Main extends PApplet{
 			wave++;
 			genWave();
 		}
-		
-		/*
-		switch(mode){
-			
-			//Display the highscores
-			case "Highscores":{
-				if(highscores == null){
-					try{
-						highscores = readScores();
-						
-					}catch (Exception e){
-						e.printStackTrace();
-					}
-				}
-
-				for(int i = 0; i < highscores.size(); i++){
-					String[] record = highscores.get(i).split(":");
-
-					textAlign(CENTER, TOP);
-					text(
-							(highscores.size() - i)	+ ". " + record[0] + "    " + record[1], 
-							width / 2, height / 2 + 
-							((highscores.size() - 1) - i) * (textAscent() + textDescent())
-						);
-				}
-				break;
-			}
-		}
-	*/
 	}
 	
 	void chkCollisions(){
@@ -141,62 +115,63 @@ public class Main extends PApplet{
 			GameObject o = objects.get(i);
 			*/
 
-			if(o instanceof Laser){
-				//Check if the laser is shooting a ship
-				for(int j = objects.size() - 1; j >= 0; j--){
-					GameObject target = objects.get(j);
+		if(o instanceof Laser){
+			//Check if the laser is shooting a ship
+			for(int j = objects.size() - 1; j >= 0; j--){
+				GameObject target = objects.get(j);
 
-					if(target instanceof Ship && target != player){
-						
-						//We need to find where the target appears to be so we can accurately get the shooting working
-						PVector screenT = new PVector(
-								screenX(target.pos.x, target.pos.y, target.pos.z),
-								screenY(target.pos.x, target.pos.y, target.pos.z)
-								);
-						
-						if(screenT.x <= mouseX + ((Ship) target).qsize && screenT.x >= mouseX - ((Ship) target).qsize){
-							if(screenT.y <= mouseY + ((Ship) target).qsize && screenT.y >= mouseY - ((Ship) target).qsize){
-								((Laser) o).applyDamage((Ship) target);
-								player.score += target.points;
-								objects.remove(o);
-							}
-						}
-					}else if(target instanceof Rocket && target != o){
-						PVector screenT = new PVector(
-								screenX(target.pos.x, target.pos.y, target.pos.z),
-								screenY(target.pos.x, target.pos.y, target.pos.z)
-								);
-
-						if(screenT.x <= mouseX + ((Rocket) target).size && screenT.x >= mouseX - ((Rocket) target).size){
-							if(screenT.y <= mouseY + ((Rocket) target).size && screenT.y >= mouseY - ((Rocket) target).size){
-								player.score += target.points;
-								objects.remove(target);
-								objects.remove(o);
-							}
+				if(target instanceof Ship && target != player){
+					
+					//We need to find where the target appears to be so we can accurately get the shooting working
+					PVector screenT = new PVector(
+							screenX(target.pos.x, target.pos.y, target.pos.z),
+							screenY(target.pos.x, target.pos.y, target.pos.z)
+							);
+					
+					if(screenT.x <= mouseX + ((Ship) target).qsize && screenT.x >= mouseX - ((Ship) target).qsize){
+						if(screenT.y <= mouseY + ((Ship) target).qsize && screenT.y >= mouseY - ((Ship) target).qsize){
+							((Laser) o).applyDamage((Ship) target);
+							player.score += target.points;
+							objects.remove(o);
 						}
 					}
-				}
+				}else if(target instanceof Rocket && target != o){
+					PVector screenT = new PVector(
+							screenX(target.pos.x, target.pos.y, target.pos.z),
+							screenY(target.pos.x, target.pos.y, target.pos.z)
+							);
 
-				//Check if the laser is out of bounds
-				if(o.pos.z < ((Laser) o).parent.range){
-					objects.remove(o);
-				}
-
-			}else if(o instanceof Rocket){
-				if(o.pos.z >= 0){
-					((Rocket) o).applyDamage(player);
-					if(player.shield <= 0){
-						changeMode("Record");
+					if(screenT.x <= mouseX + ((Rocket) target).size && screenT.x >= mouseX - ((Rocket) target).size){
+						if(screenT.y <= mouseY + ((Rocket) target).size && screenT.y >= mouseY - ((Rocket) target).size){
+							player.score += target.points;
+							objects.remove(target);
+							objects.remove(o);
+						}
 					}
-					objects.remove(o);
 				}
 			}
+
+			//Check if the laser is out of bounds
+			if(o.pos.z < ((Laser) o).parent.range){
+				objects.remove(o);
+			}
+
+		}else if(o instanceof Rocket){
+			if(o.pos.z >= 0){
+				((Rocket) o).applyDamage(player);
+				if(player.shield <= 0){
+					changeMode("Record");
+				}
+				objects.remove(o);
+			}
+		}
 	}
 
 	//Spawn a wave of tie fighters
 	void genWave(){
 		for(int i = 0; i < wave; i++){
 			TieFighter tf = new TieFighter(this, new PVector(
+					//TODO: Un-unify spawning in center. I.e: Spread spawnign
 					//random(i * (width / wave), (i + 1) * (width / wave)), 
 					//random(i * height / wave, (i + 1) * (height / wave)), 
 					random(0, (i + 1) * (width / wave)), 
@@ -210,6 +185,7 @@ public class Main extends PApplet{
 	//Listens for mouse clicks. Checks if user is over a button and switchs the mode accordingly
 	public void mouseClicked(){
 		if(mode == "Menu" || mode == "Highscores"){
+			//Looping unavoidable here
 			for(int i = objects.size() - 1; i >= 0; i--){
 				GameObject go = objects.get(i);
 				if(go instanceof MenuObject){
@@ -255,8 +231,8 @@ public class Main extends PApplet{
 				name += key;
 			}
 
-			if(o instanceof RecordScoreScreen){
-				((RecordScoreScreen) o).name = name;
+			for(GameObject go : objects){
+				if(go instanceof RecordScoreScreen) ((RecordScoreScreen) go).name = name;
 			}
 		}
 	}
@@ -295,7 +271,6 @@ public class Main extends PApplet{
 			for(int i = 0; i < highestRec; i++){
 				scores.set(i, scores.get(i + 1));
 			}
-			//TODO: Get name
 			scores.set(highestRec, name + ":" + player.score);
 			saveScore(scores);
 		}
