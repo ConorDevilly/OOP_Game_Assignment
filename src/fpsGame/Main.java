@@ -37,6 +37,7 @@ public class Main extends PApplet{
 		changeMode("Menu");
 	}
 	
+	//Clears the object array and initalises anything needed for that particular screen
 	void changeMode(String m){
 		objects.clear();
 		
@@ -60,6 +61,20 @@ public class Main extends PApplet{
 				genWave();
 				break;
 			}
+			case "Record":{
+				//TODO: Fix...add keyTyped in update?
+				RecordScoreScreen recScore = new RecordScoreScreen(this, player.score);
+				objects.add(recScore);
+				break;
+			}
+			case "Highscores":{
+				try{
+					ArrayList<String> highscores = readScores();
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				break;
+			}
 		}
 		
 		mode = m;
@@ -71,17 +86,17 @@ public class Main extends PApplet{
 		background(0);
 
 		boolean enemyFound = false;
-		for(int i = objects.size() - 1; i >= 0; i--){
+		//for(int i = objects.size() - 1; i >= 0; i--){
+		for(int i = 0; i < objects.size(); i++){
 			GameObject o = objects.get(i);
 			
 			if(!paused) o.update();
 			o.render();
 			
-			if(mode == "Play"){
-				enemyFound = (o instanceof TieFighter) ? true : enemyFound;
-				chkCollisions();
-			}
+			if(mode == "Play") enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 		}
+
+		if(!paused && mode == "Play") chkCollisions();
 
 		//Spawn a new wave of tie fighters if none are left
 		if(!enemyFound && mode == "Play"){
@@ -91,49 +106,6 @@ public class Main extends PApplet{
 		
 		/*
 		switch(mode){
-			//The start screen
-			case "Menu":{
-				
-				for(int i = objects.size() - 1; i >= 0; i--){
-					GameObject o = objects.get(i);
-					o.update();
-					o.render();
-				}
-				
-				break;
-			}
-
-			//Normal game loop
-			case "Play":{
-				boolean enemyFound = false;
-				for(int i = objects.size() - 1; i >= 0; i--){
-					GameObject o = objects.get(i);
-					
-					if(paused == false){
-						o.update();
-					}
-					o.render();
-					
-					enemyFound = (o instanceof TieFighter) ? true : enemyFound;
-				}
-
-				chkCollisions();
-				
-				//Spawn a new wave of tie fighters if none are left
-				if(!enemyFound){
-					wave++;
-					genWave();
-				}
-				break;
-			}
-			
-			//Take the user's score when they die
-			case "Record":{
-				textAlign(CENTER);
-				text("Your Score: " + player.score, width / 2, height / 2);
-				text("Name: " + name, width / 2, height / 2 + textAscent() + textDescent());
-				break;
-			}
 			
 			//Display the highscores
 			case "Highscores":{
@@ -207,16 +179,14 @@ public class Main extends PApplet{
 
 				//Check if the laser is out of bounds
 				if(o.pos.z < ((Laser) o).parent.range){
-						objects.remove(o);
+					objects.remove(o);
 				}
 
 			}else if(o instanceof Rocket){
 				if(o.pos.z >= 0){
 					((Rocket) o).applyDamage(player);
 					if(player.shield <= 0){
-						mode = "Record";
-						objects.clear();
-						wave = 1;
+						changeMode("Record");
 					}
 					objects.remove(o);
 				}
@@ -245,6 +215,7 @@ public class Main extends PApplet{
 				if(go instanceof MenuObject){
 					if(((MenuObject) go).active){
 						changeMode(((MenuObject) go).text);
+						break;
 					}
 				}
 			}
@@ -270,6 +241,7 @@ public class Main extends PApplet{
 	//Takes the user's name when they die
 	public void keyTyped(){
 		if(mode == "Record"){
+			
 			if(key == BACKSPACE){
 				if(name.length() > 0)
 					name = name.substring(0, name.length() - 1);
@@ -279,9 +251,16 @@ public class Main extends PApplet{
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				mode = "Menu";
+				changeMode("Menu");
 			}else{
 				name += key;
+			}
+
+			//TODO: HORRIBLE INEFFICIENT LOOPING
+			for(GameObject go : objects){
+				if(go instanceof RecordScoreScreen){
+					((RecordScoreScreen) go).name = name;
+				}
 			}
 		}
 	}
