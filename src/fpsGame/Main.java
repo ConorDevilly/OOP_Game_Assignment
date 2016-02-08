@@ -93,11 +93,11 @@ public class Main extends PApplet{
 			
 			if(!paused) o.update();
 			o.render();
+			if(!paused && mode == "Play") chkCollisions();
 			
 			if(mode == "Play") enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 		}
 
-		if(!paused && mode == "Play") chkCollisions();
 
 		//Spawn a new wave of tie fighters if none are left
 		if(!enemyFound && mode == "Play"){
@@ -136,8 +136,10 @@ public class Main extends PApplet{
 	}
 	
 	void chkCollisions(){
+		/*
 		for(int i = 0; i < objects.size(); i++){
 			GameObject o = objects.get(i);
+			*/
 
 			if(o instanceof Laser){
 				//Check if the laser is shooting a ship
@@ -189,7 +191,6 @@ public class Main extends PApplet{
 					objects.remove(o);
 				}
 			}
-		}
 	}
 
 	//Spawn a wave of tie fighters
@@ -206,8 +207,8 @@ public class Main extends PApplet{
 		}
 	}
 	
+	//Listens for mouse clicks. Checks if user is over a button and switchs the mode accordingly
 	public void mouseClicked(){
-		//TODO: STOP WITH THE DAMN LOOPS
 		if(mode == "Menu" || mode == "Highscores"){
 			for(int i = objects.size() - 1; i >= 0; i--){
 				GameObject go = objects.get(i);
