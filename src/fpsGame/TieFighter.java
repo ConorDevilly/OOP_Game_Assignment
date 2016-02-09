@@ -48,7 +48,7 @@ public class TieFighter extends Ship{
 	void setTurn(){
 		turning = true;
 		rot = 0;
-		//rotInc = p.random(0.025f, 0.075f);
+		rotInc = p.random(0.025f, 0.075f);
 	}
 	
 	//Set the flight path and calculate and variables needed for it to work
@@ -107,22 +107,25 @@ public class TieFighter extends Ship{
 			if(rot > PApplet.PI) turning = false;
 			
 			if(shield <= 0){
-				//Main.objects.remove(this);
-				dying = true;
-				turning = false;
-				rotInc = 0.01f;
-				fireChance = 0;
+				//Chance to animate death
+				if(p.random(0, 10) < 2){
+					dying = true;
+					turning = false;
+					rot = 0;
+					rotInc = 0.02f;
+					fireChance = 0;
+					points = 0;
+				}else{
+					Main.objects.remove(this);
+				}
 			}
 
-			if(p.frameCount % 60 == 0)
-				if(p.random(0, 100) > 100 - fireChance) 
-					shoot();
+			if((p.frameCount % 60 == 0) && (p.random(0, 100) > 100 - fireChance))
+				shoot();
 			
 			switch(flightPath){
-
 				//Elliptically loop around the XWing
 				case 0:{
-					//TODO: Fix cheat...
 					theta += thetaInc;
 					pos.x += radX * PApplet.cos(theta);  
 					pos.y += radY * PApplet.sin(theta);
@@ -144,7 +147,7 @@ public class TieFighter extends Ship{
 
 			}
 		}else{
-			if(rot > PApplet.HALF_PI){
+			if(rot < PApplet.HALF_PI){
 				rot += rotInc;
 			}else{
 				Main.objects.remove(this);
@@ -164,7 +167,6 @@ public class TieFighter extends Ship{
 
 		p.noFill();
 		p.stroke(0, 255, 0);
-
 		
 		if(!dying){
 			//Sphere
@@ -180,101 +182,42 @@ public class TieFighter extends Ship{
 			p.vertex(-hsize,qsize / 4, 0);
 			p.vertex(hsize, qsize / 4, 0);
 			p.endShape();
+
+			//Gun
+			p.fill(255, 0, 0);
+			p.stroke(255, 0, 0);
+			p.beginShape();
+			p.vertex(0, qsize, 0);
+			p.vertex(0, qsize + 1, 0);
+			p.vertex(0, qsize + size / 20, 0);
+			p.translate(0, qsize, 0);
+			p.sphere(3);
+			p.translate(0, -qsize, 0);
+			p.endShape();
 		}
 
-		//Left Wing
-		if(dying){
-			p.translate(-hsize, 0, hsize);
-			p.rotateZ(-rot);
-
-			p.vertex(0, 0, 0);
-			p.vertex(0, -hsize, qsize);
-			p.vertex(0, -hsize, -qsize);
-			p.vertex(0, 0, -hsize);
-			p.vertex(0, hsize, -qsize);
-			p.vertex(0, hsize, qsize);
-			p.vertex(0, 0, hsize);
-			p.vertex(0, 0, -hsize);
-			p.vertex(0, hsize, -qsize);
-			p.vertex(0, -hsize, qsize);
-			p.vertex(0, -hsize, -qsize);
-			p.vertex(0, hsize, qsize);
-			//TODO Get back to righ place...???
-		}else{
-			/*
-			p.vertex(-hsize, 0, 0); 
-			p.vertex(-hsize, 0, hsize);
-			p.vertex(-hsize, -hsize, qsize);
-			p.vertex(-hsize, -hsize, -qsize);
-			p.vertex(-hsize, 0, -hsize);
-			p.vertex(-hsize, hsize, -qsize);
-			p.vertex(-hsize, hsize, qsize);
-			p.vertex(-hsize, 0, hsize);
-			p.vertex(-hsize, 0, -hsize);
-			p.vertex(-hsize, hsize, -qsize);
-			p.vertex(-hsize, -hsize, qsize);
-			p.vertex(-hsize, -hsize, -qsize);
-			p.vertex(-hsize, hsize, qsize);
-			*/
-			renderWing(new PVector(-hsize, 0, 0));
-		}
-
-		//Right Wing
-		if(dying){
-			p.pushMatrix();
-			p.translate(hsize, 0, hsize);
-			p.rotateZ(rot);
-
-			p.vertex(0, 0, 0);
-			p.vertex(0, -hsize, qsize);
-			p.vertex(0, -hsize, -qsize);
-			p.vertex(0, 0, -hsize);
-			p.vertex(0, hsize, -qsize);
-			p.vertex(0, hsize, qsize);
-			p.vertex(0, 0, hsize);
-			p.vertex(0, 0, -hsize);
-			p.vertex(0, hsize, -qsize);
-			p.vertex(0, -hsize, qsize);
-			p.vertex(0, -hsize, -qsize);
-			p.vertex(0, hsize, qsize);
-
-			p.popMatrix();
-			
-		}else{
-			/*
-			p.vertex(hsize, 0, 0);
-			p.vertex(hsize, 0, hsize);
-			p.vertex(hsize, -hsize, qsize);
-			p.vertex(hsize, -hsize, -qsize);
-			p.vertex(hsize, 0, -hsize);
-			p.vertex(hsize, hsize, -qsize);
-			p.vertex(hsize, hsize, qsize);
-			p.vertex(hsize, 0, hsize);
-			p.vertex(hsize, 0, -hsize);
-			p.vertex(hsize, hsize, -qsize);
-			p.vertex(hsize, -hsize, qsize);
-			p.vertex(hsize, -hsize, -qsize);
-			p.vertex(hsize, hsize, qsize);
-			*/
-			renderWing(new PVector(hsize, 0, 0));
-		}
-		
-		//Gun
-		p.fill(255, 0, 0);
-		p.stroke(255, 0, 0);
-		p.vertex(0, qsize, 0);
-		p.vertex(0, qsize + 1, 0);
-		p.vertex(0, qsize + size / 20, 0);
-		p.translate(0, qsize, 0);
-		p.sphere(3);
+		renderWing(new PVector(-hsize, 0, 0));
+		renderWing(new PVector(hsize, 0, 0));
 		
 		p.popStyle();
 		p.popMatrix();
 	}
 	
 	void renderWing(PVector location){
+		p.noFill();
+		p.stroke(0, 255, 0);
+
 		p.beginShape();
-		p.translate(location.x, location.y, location.z);
+
+		//Dying animation
+		if(dying){
+			p.translate(location.x + 100 * rot, location.y, location.z);
+			p.rotateX(rot);
+			p.rotateY(-rot);
+		}else{
+			p.translate(location.x, location.y, location.z);
+		}
+
 		p.vertex(0, 0, 0);
 		p.vertex(0, 0, hsize);
 		p.vertex(0, -hsize, qsize);
