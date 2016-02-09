@@ -19,6 +19,7 @@ public class TieFighter extends Ship{
 	PVector unit;
 	boolean towards;
 	boolean turning;
+	boolean dying;
 	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
@@ -101,42 +102,53 @@ public class TieFighter extends Ship{
 	@Override
 	void update(){
 		
-		if(turning) rot += rotInc;
-		if(rot > PApplet.PI) turning = false;
-		
-
-		if(shield <= 0){
-			Main.objects.remove(this);
-		}
-
-		if(p.frameCount % 60 == 0)
-			if(p.random(0, 100) > 100 - fireChance) 
-				shoot();
-		
-		switch(flightPath){
-
-			//Elliptically loop around the XWing
-			case 0:{
-				//TODO: Fix cheat...
-				theta += thetaInc;
-				pos.x += radX * PApplet.cos(theta);  
-				pos.y += radY * PApplet.sin(theta);
-				pos.z += radZ * PApplet.sin(theta);;
-				
-				//If the TF has completed one rotation of its current path, recalculate it
-				if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
-					calcFlightPath();
-				}
-				break;
-			}
+		if(!dying){
+			if(turning) rot += rotInc;
+			if(rot > PApplet.PI) turning = false;
 			
-			//Move toward a random point
-			case 1:{
-				pos.add(unit);
-				if(pos.dist(dest) < unit.mag()) calcFlightPath();
-				break;
+			if(shield <= 0){
+				//Main.objects.remove(this);
+				dying = true;
+				turning = false;
+				rotInc = 0.01f;
+				fireChance = 0;
 			}
 
+			if(p.frameCount % 60 == 0)
+				if(p.random(0, 100) > 100 - fireChance) 
+					shoot();
+			
+			switch(flightPath){
+
+				//Elliptically loop around the XWing
+				case 0:{
+					//TODO: Fix cheat...
+					theta += thetaInc;
+					pos.x += radX * PApplet.cos(theta);  
+					pos.y += radY * PApplet.sin(theta);
+					pos.z += radZ * PApplet.sin(theta);;
+					
+					//If the TF has completed one rotation of its current path, recalculate it
+					if(theta < PApplet.TWO_PI + thetaInc && theta > PApplet.TWO_PI - thetaInc){
+						calcFlightPath();
+					}
+					break;
+				}
+				
+				//Move toward a random point
+				case 1:{
+					pos.add(unit);
+					if(pos.dist(dest) < unit.mag()) calcFlightPath();
+					break;
+				}
+
+			}
+		}else{
+			if(rot > PApplet.HALF_PI){
+				rot += rotInc;
+			}else{
+				Main.objects.remove(this);
+			}
 		}
 	}
 
@@ -148,57 +160,104 @@ public class TieFighter extends Ship{
 		p.translate(pos.x, pos.y, pos.z);
 		if(turning && flightPath == 0) p.rotateZ(rot);
 		if(turning && flightPath == 1) p.rotateY(rot);
+		//TODO: Need to rotate around both wings
 
 		p.noFill();
 		p.stroke(0, 255, 0);
 
-		//Links between wings
-		p.beginShape();
-		p.vertex(-hsize, 0, 0);
-		p.vertex(hsize, 0, 0);
-		p.vertex(hsize, -qsize / 4, 0);
-		p.vertex(-hsize, -qsize / 4, 0);
-		p.vertex(-hsize,qsize / 4, 0);
-		p.vertex(hsize, qsize / 4, 0);
-		p.endShape();
 		
-		//Sphere
-		p.sphereDetail(4);
-		p.sphere(qsize);
+		if(!dying){
+			//Sphere
+			p.sphereDetail(4);
+			p.sphere(qsize);
+
+			//Links between wings
+			p.beginShape();
+			p.vertex(-hsize, 0, 0);
+			p.vertex(hsize, 0, 0);
+			p.vertex(hsize, -qsize / 4, 0);
+			p.vertex(-hsize, -qsize / 4, 0);
+			p.vertex(-hsize,qsize / 4, 0);
+			p.vertex(hsize, qsize / 4, 0);
+			p.endShape();
+		}
 
 		//Left Wing
-		p.beginShape();
-		p.vertex(-hsize, 0, 0); 
-		p.vertex(-hsize, 0, hsize);
-		p.vertex(-hsize, -hsize, qsize);
-		p.vertex(-hsize, -hsize, -qsize);
-		p.vertex(-hsize, 0, -hsize);
-		p.vertex(-hsize, hsize, -qsize);
-		p.vertex(-hsize, hsize, qsize);
-		p.vertex(-hsize, 0, hsize);
-		p.vertex(-hsize, 0, -hsize);
-		p.vertex(-hsize, hsize, -qsize);
-		p.vertex(-hsize, -hsize, qsize);
-		p.vertex(-hsize, -hsize, -qsize);
-		p.vertex(-hsize, hsize, qsize);
-		p.endShape();
+		if(dying){
+			p.translate(-hsize, 0, hsize);
+			p.rotateZ(-rot);
+
+			p.vertex(0, 0, 0);
+			p.vertex(0, -hsize, qsize);
+			p.vertex(0, -hsize, -qsize);
+			p.vertex(0, 0, -hsize);
+			p.vertex(0, hsize, -qsize);
+			p.vertex(0, hsize, qsize);
+			p.vertex(0, 0, hsize);
+			p.vertex(0, 0, -hsize);
+			p.vertex(0, hsize, -qsize);
+			p.vertex(0, -hsize, qsize);
+			p.vertex(0, -hsize, -qsize);
+			p.vertex(0, hsize, qsize);
+			//TODO Get back to righ place...???
+		}else{
+			/*
+			p.vertex(-hsize, 0, 0); 
+			p.vertex(-hsize, 0, hsize);
+			p.vertex(-hsize, -hsize, qsize);
+			p.vertex(-hsize, -hsize, -qsize);
+			p.vertex(-hsize, 0, -hsize);
+			p.vertex(-hsize, hsize, -qsize);
+			p.vertex(-hsize, hsize, qsize);
+			p.vertex(-hsize, 0, hsize);
+			p.vertex(-hsize, 0, -hsize);
+			p.vertex(-hsize, hsize, -qsize);
+			p.vertex(-hsize, -hsize, qsize);
+			p.vertex(-hsize, -hsize, -qsize);
+			p.vertex(-hsize, hsize, qsize);
+			*/
+			renderWing(new PVector(-hsize, 0, 0));
+		}
 
 		//Right Wing
-		p.beginShape();
-		p.vertex(hsize, 0, 0);
-		p.vertex(hsize, 0, hsize);
-		p.vertex(hsize, -hsize, qsize);
-		p.vertex(hsize, -hsize, -qsize);
-		p.vertex(hsize, 0, -hsize);
-		p.vertex(hsize, hsize, -qsize);
-		p.vertex(hsize, hsize, qsize);
-		p.vertex(hsize, 0, hsize);
-		p.vertex(hsize, 0, -hsize);
-		p.vertex(hsize, hsize, -qsize);
-		p.vertex(hsize, -hsize, qsize);
-		p.vertex(hsize, -hsize, -qsize);
-		p.vertex(hsize, hsize, qsize);
-		p.endShape();
+		if(dying){
+			p.pushMatrix();
+			p.translate(hsize, 0, hsize);
+			p.rotateZ(rot);
+
+			p.vertex(0, 0, 0);
+			p.vertex(0, -hsize, qsize);
+			p.vertex(0, -hsize, -qsize);
+			p.vertex(0, 0, -hsize);
+			p.vertex(0, hsize, -qsize);
+			p.vertex(0, hsize, qsize);
+			p.vertex(0, 0, hsize);
+			p.vertex(0, 0, -hsize);
+			p.vertex(0, hsize, -qsize);
+			p.vertex(0, -hsize, qsize);
+			p.vertex(0, -hsize, -qsize);
+			p.vertex(0, hsize, qsize);
+
+			p.popMatrix();
+			
+		}else{
+			/*
+			p.vertex(hsize, 0, 0);
+			p.vertex(hsize, 0, hsize);
+			p.vertex(hsize, -hsize, qsize);
+			p.vertex(hsize, -hsize, -qsize);
+			p.vertex(hsize, 0, -hsize);
+			p.vertex(hsize, hsize, -qsize);
+			p.vertex(hsize, hsize, qsize);
+			p.vertex(hsize, 0, hsize);
+			p.vertex(hsize, 0, -hsize);
+			p.vertex(hsize, hsize, -qsize);
+			p.vertex(hsize, -hsize, qsize);
+			p.vertex(hsize, -hsize, -qsize);
+			p.vertex(hsize, hsize, qsize);
+			*/
+			renderWing(new PVector(hsize, 0, 0));
+		}
 		
 		//Gun
 		p.fill(255, 0, 0);
@@ -211,5 +270,25 @@ public class TieFighter extends Ship{
 		
 		p.popStyle();
 		p.popMatrix();
+	}
+	
+	void renderWing(PVector location){
+		p.beginShape();
+		p.translate(location.x, location.y, location.z);
+		p.vertex(0, 0, 0);
+		p.vertex(0, 0, hsize);
+		p.vertex(0, -hsize, qsize);
+		p.vertex(0, -hsize, -qsize);
+		p.vertex(0, 0, -hsize);
+		p.vertex(0, hsize, -qsize);
+		p.vertex(0, hsize, qsize);
+		p.vertex(0, 0, hsize);
+		p.vertex(0, 0, -hsize);
+		p.vertex(0, hsize, -qsize);
+		p.vertex(0, -hsize, qsize);
+		p.vertex(0, -hsize, -qsize);
+		p.vertex(0, hsize, qsize);
+		p.endShape();
+		p.translate(-location.x, -location.y, -location.z);
 	}
 }
