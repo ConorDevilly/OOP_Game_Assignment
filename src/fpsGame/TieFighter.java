@@ -14,12 +14,11 @@ public class TieFighter extends Ship{
 	float radX;
 	float radY;
 	float radZ;
-	float oPosZ;
 	float fireChance;
 	PVector dest;
 	PVector unit;
 	boolean towards;
-	boolean rotating;
+	boolean turning;
 	int flightPath;
 
 	TieFighter(PApplet p, PVector pos){
@@ -28,8 +27,11 @@ public class TieFighter extends Ship{
 		speed = 30;
 		shield = 100;
 		fireRate = 50;
-		fireChance = 25;
+		fireChance = 20;
 		points = 100;
+		turning = false;
+		rot = 0;
+		rotInc = 0.1f;
 		
 		calcFlightPath();
 	}
@@ -39,6 +41,13 @@ public class TieFighter extends Ship{
 		PVector currPos = new PVector(pos.x, pos.y, pos.z);
 		Rocket r = new Rocket(p, currPos, new PVector(p.width / 2, p.height / 2, 0), this);
 		Main.objects.add(r);
+	}
+	
+	//Set the XWing turning
+	void setTurn(){
+		turning = true;
+		rot = 0;
+		//rotInc = p.random(0.025f, 0.075f);
 	}
 	
 	//Set the flight path and calculate and variables needed for it to work
@@ -58,14 +67,10 @@ public class TieFighter extends Ship{
 				radX = p.random(-speed, speed);
 				radY = p.random(-speed, speed);
 				radZ = p.random(0, speed / 2);
-				break;
-			}
-			
-			//Move towards & away from XWing
-			case 2:{
-				//Save the origional position and set the direction
-				oPosZ = pos.z;
-				towards = true;
+
+				rotInc = thetaInc;
+				setTurn();
+				
 				break;
 			}
 			
@@ -83,6 +88,10 @@ public class TieFighter extends Ship{
 				
 				//Divide the distance by the time to get the speed it should travel in each direction
 				unit = PVector.div(unit, time);
+				
+				
+				rotInc = PApplet.TWO_PI / time;
+				setTurn();
 
 				break;
 			}
@@ -91,6 +100,9 @@ public class TieFighter extends Ship{
 
 	@Override
 	void update(){
+		
+		if(turning) rot += rotInc;
+		if(rot > PApplet.PI) turning = false;
 		
 
 		if(shield <= 0){
@@ -118,19 +130,6 @@ public class TieFighter extends Ship{
 				break;
 			}
 			
-			//Move straight towards and away from XWing
-			case 2:{
-				//Move towards the XWing, unless its past the XWing Z pos, then move away from it
-				towards = (pos.z >= 500) ? false : towards;
-				pos.z += (towards) ? speed : -speed;
-				
-				//Recalc if near star position
-				if(pos.z < oPosZ + speed && pos.z > oPosZ - speed){
-					calcFlightPath();
-				}
-				break;
-			}
-			
 			//Move toward a random point
 			case 1:{
 				pos.add(unit);
@@ -143,13 +142,13 @@ public class TieFighter extends Ship{
 
 	@Override
 	void render() {
-		//TODO: Cater for rotations
-		//TODO: Fix multiple functions
 		p.pushMatrix();
 		p.pushStyle();
 
 		p.translate(pos.x, pos.y, pos.z);
-		/* DEBUG */ //p.rotateY(PApplet.PI / 2);
+		if(turning && flightPath == 0) p.rotateZ(rot);
+		if(turning && flightPath == 1) p.rotateY(rot);
+
 		p.noFill();
 		p.stroke(0, 255, 0);
 

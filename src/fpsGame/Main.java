@@ -20,6 +20,16 @@ public class Main extends PApplet{
 	String mode;
 	GameObject o;
 	
+	/*
+	 * MASTER TODO LIST:
+	 * 
+	 * 1. Add sound
+	 * 2. Re-add credits
+	 * 3. Create other ships (Interceptor, bomber)
+	 * 4. Add animations for dying, exploding
+	 *
+	 */
+	
 
 	public void setup(){
 		size(800, 600, P3D);
@@ -30,8 +40,6 @@ public class Main extends PApplet{
 		name = "";
 		wave = 1;
 
-		background(0);
-		
 		//Need to load a font, otherwise text appears blurry
 		textFont(loadFont("Carlito-48.vlw"));
 
@@ -90,17 +98,13 @@ public class Main extends PApplet{
 		background(0);
 
 		boolean enemyFound = false;
-		//for(int i = objects.size() - 1; i >= 0; i--){
 		for(int i = 0; i < objects.size(); i++){
 			o = objects.get(i);
-			
-			if(!paused) o.update();
 			o.render();
+			if(!paused) o.update();
 			if(!paused && mode == "Play") chkCollisions();
-			
 			if(mode == "Play") enemyFound = (o instanceof TieFighter) ? true : enemyFound;
 		}
-
 
 		//Spawn a new wave of tie fighters if none are left
 		if(!enemyFound && mode == "Play"){
@@ -109,17 +113,14 @@ public class Main extends PApplet{
 		}
 	}
 	
+	//Check for collisions
 	void chkCollisions(){
-		/*
-		for(int i = 0; i < objects.size(); i++){
-			GameObject o = objects.get(i);
-			*/
-
 		if(o instanceof Laser){
 			//Check if the laser is shooting a ship
 			for(int j = objects.size() - 1; j >= 0; j--){
 				GameObject target = objects.get(j);
 
+				//Check if Target is a ship
 				if(target instanceof Ship && target != player){
 					
 					//We need to find where the target appears to be so we can accurately get the shooting working
@@ -128,6 +129,7 @@ public class Main extends PApplet{
 							screenY(target.pos.x, target.pos.y, target.pos.z)
 							);
 					
+					//Check if the screen position of the ship is close to the mouse
 					if(screenT.x <= mouseX + ((Ship) target).qsize && screenT.x >= mouseX - ((Ship) target).qsize){
 						if(screenT.y <= mouseY + ((Ship) target).qsize && screenT.y >= mouseY - ((Ship) target).qsize){
 							((Laser) o).applyDamage((Ship) target);
@@ -135,6 +137,7 @@ public class Main extends PApplet{
 							objects.remove(o);
 						}
 					}
+				//Check if laser shooting an enemy rocket
 				}else if(target instanceof Rocket && target != o){
 					PVector screenT = new PVector(
 							screenX(target.pos.x, target.pos.y, target.pos.z),
