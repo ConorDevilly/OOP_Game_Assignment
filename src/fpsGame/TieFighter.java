@@ -4,7 +4,6 @@ import processing.core.*;
 
 public class TieFighter extends Ship{
 	
-	//TODO: Reduce to necessary (scope)
 	float theta;
 	float thetaInc;
 	float omega;
@@ -15,13 +14,12 @@ public class TieFighter extends Ship{
 	float radY;
 	float radZ;
 	float fireChance;
+	float initChance;
 	PVector dest;
 	PVector unit;
-	boolean towards;
 	boolean turning;
 	boolean dying;
 	int flightPath;
-	float initChance;
 
 	TieFighter(PApplet p, PVector pos){
 		super(p, 200, pos);
@@ -43,6 +41,8 @@ public class TieFighter extends Ship{
 		//Need to copy the current position. Cannot pass the pos PVector as passing objects work like pass by reference
 		PVector currPos = new PVector(pos.x, pos.y, pos.z);
 		Rocket r = new Rocket(p, currPos, new PVector(p.width / 2, p.height / 2, 0), this);
+		audio = minim.loadFile("sounds/TFFire.mp3");
+		audio.play();
 		Main.objects.add(r);
 	}
 	
@@ -55,9 +55,7 @@ public class TieFighter extends Ship{
 	
 	//Set the flight path and calculate and variables needed for it to work
 	void calcFlightPath(){
-		//TODO: Make chance based
 		flightPath = (int) p.random(0, 2);
-
 		
 		switch(flightPath){
 			//Elliptically loop around the XWing
@@ -66,14 +64,11 @@ public class TieFighter extends Ship{
 				theta = 0;
 				thetaInc = p.random(1, speed / 2) / 100;
 				
-				//Pick a random radius for the orbit
+				//Pick a random radius for the orbit and start turning the TF
 				radX = p.random(-speed, speed);
 				radY = p.random(-speed, speed);
 				radZ = p.random(0, speed / 2);
-
-				rotInc = thetaInc;
 				setTurn();
-				
 				break;
 			}
 			
@@ -88,14 +83,9 @@ public class TieFighter extends Ship{
 				
 				//Make a PVector of the distance between the src and dst
 				unit = PVector.sub(dest, pos);
-				
 				//Divide the distance by the time to get the speed it should travel in each direction
 				unit = PVector.div(unit, time);
-				
-				
-				rotInc = PApplet.TWO_PI / time;
 				setTurn();
-
 				break;
 			}
 		}
@@ -108,6 +98,14 @@ public class TieFighter extends Ship{
 			if(turning) rot += rotInc;
 			if(rot > PApplet.PI) turning = false;
 			
+			//Chance to play a noise
+			if(p.random(0, 500) < 1){
+				/*
+				audio = minim.loadFile("sounds/TFFly.mp3");
+				audio.play();
+				*/
+			}
+			
 			if(shield <= 0){
 				//Chance to animate death
 				if(p.random(0, 10) < 2){
@@ -117,6 +115,9 @@ public class TieFighter extends Ship{
 					rotInc = 0.02f;
 					fireChance = 0;
 					points = 0;
+
+					audio = minim.loadFile("sounds/TFExplode.mp3");
+					audio.play();
 				}else{
 					Main.objects.remove(this);
 				}
@@ -167,37 +168,12 @@ public class TieFighter extends Ship{
 		p.translate(pos.x, pos.y, pos.z);
 		if(turning && flightPath == 0) p.rotateZ(rot);
 		if(turning && flightPath == 1) p.rotateY(rot);
-		//TODO: Need to rotate around both wings
 
 		p.noFill();
 		p.stroke(0, 255, 0);
 		
 		if(!dying){
-			//Sphere
-			p.sphereDetail(4);
-			p.sphere(qsize);
-
-			//Links between wings
-			p.beginShape();
-			p.vertex(-hsize, 0, 0);
-			p.vertex(hsize, 0, 0);
-			p.vertex(hsize, -qsize / 4, 0);
-			p.vertex(-hsize, -qsize / 4, 0);
-			p.vertex(-hsize,qsize / 4, 0);
-			p.vertex(hsize, qsize / 4, 0);
-			p.endShape();
-
-			//Gun
-			p.fill(255, 0, 0);
-			p.stroke(255, 0, 0);
-			p.beginShape();
-			p.vertex(0, qsize, 0);
-			p.vertex(0, qsize + 1, 0);
-			p.vertex(0, qsize + size / 20, 0);
-			p.translate(0, qsize, 0);
-			p.sphere(3);
-			p.translate(0, -qsize, 0);
-			p.endShape();
+			renderBody();
 		}
 
 		renderWing(new PVector(-hsize, 0, 0));
@@ -205,6 +181,34 @@ public class TieFighter extends Ship{
 		
 		p.popStyle();
 		p.popMatrix();
+	}
+	
+	void renderBody(){
+		//Sphere
+		p.sphereDetail(4);
+		p.sphere(qsize);
+
+		//Links between wings
+		p.beginShape();
+		p.vertex(-hsize, 0, 0);
+		p.vertex(hsize, 0, 0);
+		p.vertex(hsize, -qsize / 4, 0);
+		p.vertex(-hsize, -qsize / 4, 0);
+		p.vertex(-hsize,qsize / 4, 0);
+		p.vertex(hsize, qsize / 4, 0);
+		p.endShape();
+
+		//Gun
+		p.fill(255, 0, 0);
+		p.stroke(255, 0, 0);
+		p.beginShape();
+		p.vertex(0, qsize, 0);
+		p.vertex(0, qsize + 1, 0);
+		p.vertex(0, qsize + size / 20, 0);
+		p.translate(0, qsize, 0);
+		p.sphere(3);
+		p.translate(0, -qsize, 0);
+		p.endShape();
 	}
 	
 	void renderWing(PVector location){
@@ -243,7 +247,7 @@ public class TieFighter extends Ship{
 	boolean onScreen(){
 		boolean ret = true;
 		float screenX = p.screenX(pos.x, pos.y, pos.z);
-		float screenY = p.screenX(pos.x, pos.y, pos.z);
+		float screenY = p.screenY(pos.x, pos.y, pos.z);
 		
 		if(screenX > p.width || screenX < 0 || screenY > p.height || screenY < 0) 
 			ret = false;

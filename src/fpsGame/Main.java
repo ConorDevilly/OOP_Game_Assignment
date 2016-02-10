@@ -1,7 +1,7 @@
 package fpsGame;
 
 import processing.core.*;
-
+import ddf.minim.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -19,6 +19,8 @@ public class Main extends PApplet{
 	String name;
 	String mode;
 	GameObject o;
+	Minim minim;
+	AudioPlayer audio;
 	
 	/*
 	 * MASTER TODO LIST:
@@ -26,7 +28,6 @@ public class Main extends PApplet{
 	 * 1. Add sound
 	 * 2. Re-add credits
 	 * 3. Create other ships (Interceptor, bomber)
-	 * 4. Add animations for dying, exploding
 	 *
 	 */
 	
@@ -163,6 +164,9 @@ public class Main extends PApplet{
 			if(o.pos.z >= 0){
 				((Rocket) o).applyDamage(player);
 				if(player.shield <= 0){
+					minim = new Minim(this);
+					audio = minim.loadFile("sounds/XWingFire.mp3");
+					audio.play();
 					changeMode("Record");
 				}
 				objects.remove(o);
@@ -243,7 +247,7 @@ public class Main extends PApplet{
 	ArrayList<String> readScores() throws Exception{
 		ArrayList<String> scores = new ArrayList<String>();
 		
-		BufferedReader reader = new BufferedReader(new FileReader("scores.txt"));
+		BufferedReader reader = new BufferedReader(new FileReader("data/scores.txt"));
 		String line;
 		try {
 			while((line = reader.readLine()) != null){
@@ -280,7 +284,7 @@ public class Main extends PApplet{
 	}
 	
 	void saveScore(ArrayList<String> input){
-		File scores = new File("scores.txt");
+		File scores = new File("data/scores.txt");
 
 		try {
 			FileWriter writer;

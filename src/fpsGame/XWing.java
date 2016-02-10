@@ -35,6 +35,10 @@ public class XWing extends Ship{
 				Laser l = new Laser(p, p.color(0, 255, 0), lStart, new PVector(p.mouseX, p.mouseY, 0), this);
 				Main.objects.add(l);
 			}
+			
+			//Play a shooting sound
+			audio = minim.loadFile("sounds/XWingFire.mp3");
+			audio.play();
 		}
 	}
 
