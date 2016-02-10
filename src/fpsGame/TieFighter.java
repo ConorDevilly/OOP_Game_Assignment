@@ -25,7 +25,7 @@ public class TieFighter extends Ship{
 		speed = 30;
 		shield = 100;
 		fireRate = 50;
-		fireChance = 30;
+		fireChance = 50;
 		initChance = fireChance;
 		points = 100;
 		turning = false;
