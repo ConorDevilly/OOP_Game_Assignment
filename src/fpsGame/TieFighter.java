@@ -21,6 +21,7 @@ public class TieFighter extends Ship{
 	boolean turning;
 	boolean dying;
 	int flightPath;
+	float initChance;
 
 	TieFighter(PApplet p, PVector pos){
 		super(p, 200, pos);
@@ -29,6 +30,7 @@ public class TieFighter extends Ship{
 		shield = 100;
 		fireRate = 50;
 		fireChance = 20;
+		initChance = fireChance;
 		points = 100;
 		turning = false;
 		rot = 0;
@@ -120,6 +122,8 @@ public class TieFighter extends Ship{
 				}
 			}
 
+			//Check that the TF is on screen before it shoots
+			fireChance = (onScreen()) ? initChance : 0;
 			if((p.frameCount % 60 == 0) && (p.random(0, 100) > 100 - fireChance))
 				shoot();
 			
@@ -233,5 +237,17 @@ public class TieFighter extends Ship{
 		p.vertex(0, hsize, qsize);
 		p.endShape();
 		p.translate(-location.x, -location.y, -location.z);
+	}
+	
+	//Check that the TF is on the screen
+	boolean onScreen(){
+		boolean ret = true;
+		float screenX = p.screenX(pos.x, pos.y, pos.z);
+		float screenY = p.screenX(pos.x, pos.y, pos.z);
+		
+		if(screenX > p.width || screenX < 0 || screenY > p.height || screenY < 0) 
+			ret = false;
+
+		return ret;
 	}
 }
