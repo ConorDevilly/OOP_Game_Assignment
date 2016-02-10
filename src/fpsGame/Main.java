@@ -176,7 +176,7 @@ public class Main extends PApplet{
 			TieFighter tf = new TieFighter(this, new PVector(
 					random(width / (i + 1), width / (i+2)),
 					random(height / (i + 1), height / (i+2)),
-					random(-5000, -2000))
+					random(-4500, -2000))
 					);
 			objects.add(tf);
 		}

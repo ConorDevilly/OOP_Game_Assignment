@@ -6,8 +6,6 @@ public class TieFighter extends Ship{
 	
 	float theta;
 	float thetaInc;
-	float omega;
-	float omegaInc;
 	float rot;
 	float rotInc;
 	float radX;
@@ -27,7 +25,7 @@ public class TieFighter extends Ship{
 		speed = 30;
 		shield = 100;
 		fireRate = 50;
-		fireChance = 20;
+		fireChance = 30;
 		initChance = fireChance;
 		points = 100;
 		turning = false;
@@ -97,14 +95,6 @@ public class TieFighter extends Ship{
 		if(!dying){
 			if(turning) rot += rotInc;
 			if(rot > PApplet.PI) turning = false;
-			
-			//Chance to play a noise
-			if(p.random(0, 500) < 1){
-				/*
-				audio = minim.loadFile("sounds/TFFly.mp3");
-				audio.play();
-				*/
-			}
 			
 			if(shield <= 0){
 				//Chance to animate death
