@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//A Tie Fighter
 public class TieFighter extends Ship{
 	
 	float theta;

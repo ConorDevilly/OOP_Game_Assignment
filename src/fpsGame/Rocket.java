@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//Tie Fighter's bomb / rocket
 public class Rocket extends GameObject implements Projectile{
 
 	float dmg;

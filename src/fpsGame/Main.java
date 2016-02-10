@@ -9,6 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+//Main
 public class Main extends PApplet{
 	
 	public static ArrayList<GameObject> objects;
@@ -96,6 +97,7 @@ public class Main extends PApplet{
 		background(0);
 
 		boolean enemyFound = false;
+		//Issue in this loop whereby the program crashes sometimes if an object is removed
 		for(int i = 0; i < objects.size(); i++){
 			o = objects.get(i);
 			o.render();

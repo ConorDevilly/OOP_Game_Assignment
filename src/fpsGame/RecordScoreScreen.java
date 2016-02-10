@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.PApplet;
 
+//Screen for recording the score
 public class RecordScoreScreen extends GameObject{
 	
 	String name;

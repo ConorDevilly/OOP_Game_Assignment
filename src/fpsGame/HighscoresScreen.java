@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import processing.core.*;
 
+//Displays the top 5 highscores
 public class HighscoresScreen extends GameObject{
 
 	ArrayList<String> scores;
@@ -21,6 +22,7 @@ public class HighscoresScreen extends GameObject{
 		col2 = new PVector(col1.x + 3 * p.textWidth("5chars"), col1.y);
 		textHeight = p.textDescent() + p.textAscent();
 
+		//Colours for if the mouse is hovering on a button
 		active = p.color(0, 255, 0);
 		inactive = p.color(255, 255, 0);
 		

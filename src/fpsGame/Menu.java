@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import processing.core.*;
 
+//The menu
 public class Menu extends GameObject{
 	
 	int active;

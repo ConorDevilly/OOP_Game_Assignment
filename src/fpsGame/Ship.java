@@ -3,6 +3,7 @@ package fpsGame;
 import processing.core.*;
 import ddf.minim.*;
 
+//Basic ship template
 public abstract class Ship extends GameObject{
 	
 	float speed;

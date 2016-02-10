@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//The base class for all other objects
 public abstract class GameObject {
 	
 	PApplet p;

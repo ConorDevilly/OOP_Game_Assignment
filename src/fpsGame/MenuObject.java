@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//Choices in menus. Buttons essentially
 public class MenuObject extends GameObject{
 	
 	String text;
@@ -24,6 +25,7 @@ public class MenuObject extends GameObject{
 
 	@Override
 	void update() {
+		//Check if mouse is over a button
 		if(p.mouseX > pos.x - xSize && p.mouseX < pos.x + xSize
 				&& p.mouseY < pos.y + ySize && p.mouseY > pos.y - ySize){
 			active = true;

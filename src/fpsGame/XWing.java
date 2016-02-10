@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//The xwing
 public class XWing extends Ship{
 
 	boolean firing;

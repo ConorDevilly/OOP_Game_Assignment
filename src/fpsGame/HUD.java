@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//The Heads Up Display for the game
 public class HUD extends GameObject{
 
 	float viewDist;
@@ -56,7 +57,6 @@ public class HUD extends GameObject{
 		
 		p.popStyle();
 		p.popMatrix();
-		
 	}
 }
 

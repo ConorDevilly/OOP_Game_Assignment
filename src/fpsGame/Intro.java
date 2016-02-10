@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.PApplet;
 
+//The scrolling intoduction screen
 public class Intro extends GameObject{
 
 	float initFrame;
@@ -18,7 +19,7 @@ public class Intro extends GameObject{
 	
 	void update(){
 		if(p.frameCount - initFrame < 180){
-			
+			//Do nothing, keep the blue text
 		}else if(pos.y > p.height / 4){
 			pos.y -= 0.5;
 		}
@@ -39,6 +40,7 @@ public class Intro extends GameObject{
 			p.stroke(255, 255, 0);
 			p.fill(255, 255, 0);
 			p.textSize(14);
+
 			p.text("A compute science student attempted "
 					+ "\n to make a first-person shooter "
 					+ "\n in Processing."

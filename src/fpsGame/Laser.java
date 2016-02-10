@@ -2,6 +2,7 @@ package fpsGame;
 
 import processing.core.*;
 
+//The xwings laser 
 public class Laser extends GameObject implements Projectile{
 	
 	int colour;
@@ -28,7 +29,7 @@ public class Laser extends GameObject implements Projectile{
 		
 		unit = PVector.sub(to, pos);
 		unit = PVector.div(unit, time);
-		dmg = 25;
+		dmg = 1000;
 	}
 	
 	public void applyDamage(Ship target){

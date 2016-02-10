@@ -3,6 +3,7 @@ package fpsGame;
 import processing.core.*;
 import java.util.ArrayList;
 
+//The space background
 public class Space extends GameObject{
 	
 	int numStars;
