@@ -21,8 +21,6 @@ public class HighscoresScreen extends GameObject{
 		col2 = new PVector(col1.x + 3 * p.textWidth("5chars"), col1.y);
 		textHeight = p.textDescent() + p.textAscent();
 
-
-		//TODO: Create super screen class
 		active = p.color(0, 255, 0);
 		inactive = p.color(255, 255, 0);
 		
@@ -37,9 +35,7 @@ public class HighscoresScreen extends GameObject{
 
 	@Override
 	void render() {
-		//TODO: Make look less shti
 		p.pushStyle();
-		
 		
 		for(int i = 0; i < scores.size(); i++){
 			String[] record = scores.get(i).split(":");

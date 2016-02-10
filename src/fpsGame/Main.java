@@ -14,37 +14,27 @@ public class Main extends PApplet{
 	public static ArrayList<GameObject> objects;
 	public static XWing player;
 	public static int wave;
+	public static Minim minim;
+	public static AudioPlayer audio;
 	ArrayList<String> highscores;
 	boolean paused;
 	String name;
 	String mode;
 	GameObject o;
-	Minim minim;
-	AudioPlayer audio;
 	
-	/*
-	 * MASTER TODO LIST:
-	 * 
-	 * 1. Add sound
-	 * 2. Re-add credits
-	 * 3. Create other ships (Interceptor, bomber)
-	 *
-	 */
-	
-
 	public void setup(){
 		size(800, 600, P3D);
 		cursor(CROSS);
-		mode = "Menu";
 		objects = new ArrayList<GameObject>();
 		paused = false;
 		name = "";
 		wave = 1;
+		minim = new Minim(this);
 
 		//Need to load a font, otherwise text appears blurry
 		textFont(loadFont("Carlito-48.vlw"));
 
-		changeMode("Menu");
+		changeMode("Intro");
 	}
 	
 	//Clears the object array and initalises anything needed for that particular screen
@@ -52,6 +42,13 @@ public class Main extends PApplet{
 		objects.clear();
 		
 		switch(m){
+			case "Intro":{
+				Intro intro = new Intro(this);
+				objects.add(intro);
+				Space space = new Space(this);
+				objects.add(space);
+				break;
+			}
 			case "Menu":{
 				Space space = new Space(this);
 				objects.add(space);
@@ -93,6 +90,7 @@ public class Main extends PApplet{
 		}
 
 		mode = m;
+		println(mode);
 	}
 
 	public void draw(){
@@ -164,7 +162,6 @@ public class Main extends PApplet{
 			if(o.pos.z >= 0){
 				((Rocket) o).applyDamage(player);
 				if(player.shield <= 0){
-					minim = new Minim(this);
 					audio = minim.loadFile("sounds/XWingFire.mp3");
 					audio.play();
 					changeMode("Record");
@@ -178,11 +175,8 @@ public class Main extends PApplet{
 	void genWave(){
 		for(int i = 0; i < wave; i++){
 			TieFighter tf = new TieFighter(this, new PVector(
-					//TODO: Un-unify spawning in center. I.e: Spread spawnign
-					//random(i * (width / wave), (i + 1) * (width / wave)), 
-					//random(i * height / wave, (i + 1) * (height / wave)), 
-					random(0, (i + 1) * (width / wave)), 
-					random(0, (i + 1) * (height / wave)), 
+					random(width / (i + 1), width / (i+2)),
+					random(height / (i + 1), height / (i+2)),
 					random(-5000, -2000))
 					);
 			objects.add(tf);
@@ -210,14 +204,8 @@ public class Main extends PApplet{
 		if(mode == "Play"){
 			if(key == 'p') paused = !paused;
 			if(key == ' ') player.shoot();
-		}else if(mode == "menu"){
-			if(key == ENTER){
-				changeMode("Play");
-			}else if(key == ' '){
-				mode = "Highscores";
-			}
-		}else if(mode == "Highscores"){
-			if(key == ' ' || key == ENTER) mode = "Menu";
+		}else if(mode == "Highscores" || mode == "Intro"){
+			if(key == ' ' || key == ENTER) changeMode("Menu");
 		}
 	}
 	

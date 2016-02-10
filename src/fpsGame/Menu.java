@@ -22,12 +22,9 @@ public class Menu extends GameObject{
 				"Play", active, inactive);
 		GameObject scores = new MenuObject(p, new PVector(pos.x, pos.y + 5 * (p.textDescent() + p.textAscent())), 50, 
 				"Highscores", active, inactive);
-		GameObject instructions = new MenuObject(p, new PVector(pos.x, pos.y + 7 * (p.textDescent() + p.textAscent())), 50, 
-				"How To Play", active, inactive);
 		
 		Main.objects.add(play);
 		Main.objects.add(scores);
-		//Main.objects.add(instructions);
 	}
 	
 	void update(){}
@@ -41,8 +38,7 @@ public class Menu extends GameObject{
 		
 		p.textSize(52);
 
-		//Credit to Connor Duignan for the name
-		p.text("Star Wars \n Rebel Gunner", pos.x, pos.y);
+		p.text("Random XWing Game", pos.x, pos.y);
 
 		p.popStyle();
 		p.popMatrix();

@@ -41,8 +41,8 @@ public class TieFighter extends Ship{
 		//Need to copy the current position. Cannot pass the pos PVector as passing objects work like pass by reference
 		PVector currPos = new PVector(pos.x, pos.y, pos.z);
 		Rocket r = new Rocket(p, currPos, new PVector(p.width / 2, p.height / 2, 0), this);
-		audio = minim.loadFile("sounds/TFFire.mp3");
-		audio.play();
+		Main.audio = Main.minim.loadFile("sounds/TFFire.mp3");
+		Main.audio.play();
 		Main.objects.add(r);
 	}
 	
@@ -116,8 +116,8 @@ public class TieFighter extends Ship{
 					fireChance = 0;
 					points = 0;
 
-					audio = minim.loadFile("sounds/TFExplode.mp3");
-					audio.play();
+					Main.audio = Main.minim.loadFile("sounds/TFExplode.mp3");
+					Main.audio.play();
 				}else{
 					Main.objects.remove(this);
 				}

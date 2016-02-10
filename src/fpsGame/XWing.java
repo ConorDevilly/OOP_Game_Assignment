@@ -37,8 +37,8 @@ public class XWing extends Ship{
 			}
 			
 			//Play a shooting sound
-			audio = minim.loadFile("sounds/XWingFire.mp3");
-			audio.play();
+			Main.audio = Main.minim.loadFile("sounds/XWingFire.mp3");
+			Main.audio.play();
 		}
 	}
 

@@ -13,8 +13,6 @@ public abstract class Ship extends GameObject{
 	float shield;
 	float fireRate;
 	int score;
-	Minim minim;
-	AudioPlayer audio;
 
 	Ship(PApplet p, float size, PVector pos){
 		super(p);
@@ -22,8 +20,6 @@ public abstract class Ship extends GameObject{
 		this.size = size;
 		hsize = size / 2;
 		qsize = hsize / 2;
-
-		minim = new Minim(p);
 	}
 	
 	Ship(PApplet p){

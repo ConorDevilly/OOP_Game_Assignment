@@ -48,7 +48,8 @@ public class Intro extends GameObject{
 					+ "\n he feared that Mickey Mouse's lawyers would wipe it off"
 					+ "\n the face of the internet."
 					+ "\n\n Its name:"
-					+ "\n Nameless X-Wing Game"
+					+ "\n Random X-Wing Game"
+					+ "\n\n\nPress space to play..."
 					, pos.x, pos.y);
 		}
 
