@@ -1,5 +1,5 @@
-qwert:200
 zxcvb:300
 tyuio:400
 qwert:500
 Conor:4445
+Conor:8410

@@ -90,7 +90,6 @@ public class Main extends PApplet{
 		}
 
 		mode = m;
-		println(mode);
 	}
 
 	public void draw(){
