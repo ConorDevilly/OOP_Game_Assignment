@@ -98,12 +98,16 @@ public class Main extends PApplet{
 
 		boolean enemyFound = false;
 		//Issue in this loop whereby the program crashes sometimes if an object is removed
+		//I think synchronized MIGHT help fix the issue
+
+		synchronized(objects){
 		for(int i = 0; i < objects.size(); i++){
 			o = objects.get(i);
 			o.render();
 			if(!paused) o.update();
 			if(!paused && mode == "Play") chkCollisions();
 			if(mode == "Play") enemyFound = (o instanceof TieFighter) ? true : enemyFound;
+		}
 		}
 
 		//Spawn a new wave of tie fighters if none are left
